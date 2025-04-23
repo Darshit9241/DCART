@@ -7,12 +7,11 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { addItem } from '../../redux/cartSlice';
 import { addToWishlist, removeFromWishlist } from '../../redux/wishlistSlice';
-import products from "../ProductData";
+// import products from "../ProductData";
 import { toast } from 'react-toastify';
 import { addToCompare, removeFromCompare } from '../../redux/compareSlice';
-import { removeProduct } from '../../redux/productSlice'; // 👈 Import this
+import { removeProduct } from '../../redux/productSlice'; // Import this
 import { IoIosCloseCircle } from "react-icons/io";
-
 
 export default function Product({ onCartClick, onCartOpen }) {
   const navigate = useNavigate();
@@ -33,7 +32,8 @@ export default function Product({ onCartClick, onCartOpen }) {
     setSelectedProduct(null);
   };
 
-  const toggleCompare = (product) => {
+  const toggleCompare = (e, product) => {
+    e.stopPropagation(); // Prevent event bubbling
     const isCompared = compareList.some(item => item.id === product.id);
     if (isCompared) {
       dispatch(removeFromCompare(product));
@@ -75,7 +75,8 @@ export default function Product({ onCartClick, onCartOpen }) {
   };
 
   // Function to toggle favorite status
-  const toggleFavorite = (product) => {
+  const toggleFavorite = (e, product) => {
+    e.stopPropagation(); // Prevent event bubbling
     const isWished = wishlist.some(item => item.id === product.id);
     if (isWished) {
       dispatch(removeFromWishlist(product));
@@ -137,70 +138,73 @@ export default function Product({ onCartClick, onCartOpen }) {
             const isWished = wishlist.some(item => item.id === product.id);
 
             return (
-              <div key={product.id} className="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
-                <div className="relative">
-                  <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-2xl">
-                    <img
-                      onClick={() => navigate(`/product/${product.id}`)}
-                      src={product.imgSrc}
-                      alt={product.alt}
-                      // className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
-                      className="w-full h-[300px] object-cover transform group-hover:scale-105 transition-transform duration-300 cursor-pointer"
-                    />
-                  </div>
+                <div key={product.id} className="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
 
-                  <div className="absolute top-4 right-4 flex flex-col gap-2">
-                    <button
-                      onClick={() => toggleFavorite(product)}
-                      className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${isWished ? 'text-red-500' : 'text-gray-600'
-                        }`}
-                    >
-                      {isWished ? <FaHeart className="text-xl" /> : <FaRegHeart className="text-xl" />}
-                    </button>
+                  <div className="relative">
+                    <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-2xl">
+                      <img
+                        onClick={() => navigate(`/product/${product.id}`)}
+                        src={product.imgSrc}
+                        alt={product.alt}
+                        // className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
+                        className="w-full h-[300px] object-cover transform group-hover:scale-105 transition-transform duration-300 cursor-pointer"
+                      />
+                    </div>
 
-                    <button
-                      onClick={() => handleViewDetails(product)}
-                      className="p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white text-gray-600 transition-all duration-200"
-                    >
-                      <HiOutlineViewGrid className="text-xl" />
-                    </button>
 
-                    <button
-                      onClick={() => toggleCompare(product)}
-                      className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${compareList.some(item => item.id === product.id) ? 'text-blue-500' : 'text-gray-600'
-                        }`}
-                    >
-                      <FaCodeCompare className="text-xl" />
-                    </button>
+                    <div className="absolute top-4 right-4 flex flex-col gap-2">
+                      <button
+                        onClick={(e) => toggleFavorite(e, product)}
+                        className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${isWished ? 'text-red-500' : 'text-gray-600'
+                          }`}
+                      >
+                        {isWished ? <FaHeart className="text-xl" /> : <FaRegHeart className="text-xl" />}
+                      </button>
 
-                    {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
+                      <button
+                        onClick={() => handleViewDetails(product)}
+                        className="p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white text-gray-600 transition-all duration-200"
+                      >
+                        <HiOutlineViewGrid className="text-xl" />
+                      </button>
+
+                      <button
+                        onClick={(e) => toggleCompare(e, product)}
+                        className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${compareList.some(item => item.id === product.id) ? 'text-blue-500' : 'text-gray-600'
+                          }`}
+                      >
+                        <FaCodeCompare className="text-xl" />
+                      </button>
+
+                      {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
                         <button
                           onClick={() => handleRemoveProduct(product.id)}
-                          className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200
+                          className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${compareList.some(item => item.id === product.id) ? 'text-blue-500' : 'text-gray-600'
                             }`}
                         >
                           <IoIosCloseCircle className="text-xl" />
                         </button>
                       )}
+
+                    </div>
+
+                    {product?.discount && (
+                      <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded shadow-lg">
+                        {product.discount} OFF
+                      </div>
+                    )}
+
+                    <button
+                      onClick={() => handleAddToCart(product)}
+                      className="m-3 rounded-2xl absolute bottom-0 left-0 right-0 bg-black text-white py-3 text-center font-medium transform translate-y-0 group-hover:translate-y-0 transition-transform duration-300"
+                    >
+                      Add to Cart
+                    </button>
                   </div>
 
-                  {product?.discount && (
-                    <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded shadow-lg">
-                      {product.discount} OFF
-                    </div>
-                  )}
-
-                  <button
-                    onClick={() => handleAddToCart(product)}
-                    className="absolute bottom-0 left-0 right-0 bg-black text-white py-3 text-center font-medium transform translate-y-0 group-hover:translate-y-0 transition-transform duration-300"
-                  >
-                    Add to Cart
-                  </button>
-                </div>
-
-                <div className="p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{product.name}</h3>
-                  <div className="flex items-center gap-3">
+                  <div className="p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">{product.name}</h3>
+                    <div className="flex items-center gap-3">
                       {typeof product.oldPrice === "number" && product.oldPrice > 0 && (
                         <span className="text-gray-400 line-through">${product.oldPrice.toFixed(2)}</span>
                       )}
@@ -208,19 +212,19 @@ export default function Product({ onCartClick, onCartOpen }) {
                         <span className="text-xl font-bold text-gray-900">${product.price.toFixed(2)}</span>
                       )}
                     </div>
-                </div>
+                  </div>
 
-                {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
-                  <button
-                    onClick={() => handleRemoveProduct(product.id)}
-                    className="absolute top-2 left-2 p-1.5 bg-black text-white rounded-full hover:bg-gray-800 transition-colors duration-200"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                )}
-              </div>
+                  {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
+                    <button
+                      onClick={() => handleRemoveProduct(product.id)}
+                      className="absolute top-2 left-2 p-1.5 bg-black text-white rounded-full hover:bg-gray-800 transition-colors duration-200"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
             );
           })}
         </div>
