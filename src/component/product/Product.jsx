@@ -177,7 +177,7 @@ export default function Product({ onCartClick, onCartOpen }) {
                       {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
                         <button
                           onClick={() => handleRemoveProduct(product.id)}
-                          className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${compareList.some(item => item.id === product.id) ? 'text-blue-500' : 'text-gray-600'
+                          className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200
                             }`}
                         >
                           <IoIosCloseCircle className="text-xl" />
