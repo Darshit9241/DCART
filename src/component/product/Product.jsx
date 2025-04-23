@@ -151,37 +151,40 @@ export default function Product({ onCartClick, onCartOpen }) {
                     </div>
 
 
-                    <div className="absolute top-4 right-4 flex flex-col gap-2">
+                    <div className="absolute top-4 right-4 flex flex-col gap-3">
                       <button
                         onClick={() => toggleFavorite(product)}
-                        className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${isWished ? 'text-red-500' : 'text-gray-600'
+                        className={`p-3 rounded-full bg-white/90 shadow-md backdrop-blur-sm hover:bg-white transition-all duration-200 ${isWished ? 'text-red-500' : 'text-gray-600'
                           }`}
+                        aria-label="Toggle favorite"
                       >
-                        {isWished ? <FaHeart className="text-xl" /> : <FaRegHeart className="text-xl" />}
+                        {isWished ? <FaHeart className="text-xl md:text-2xl" /> : <FaRegHeart className="text-xl md:text-2xl" />}
                       </button>
 
                       <button
                         onClick={() => handleViewDetails(product)}
-                        className="p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white text-gray-600 transition-all duration-200"
+                        className="p-3 rounded-full bg-white/90 shadow-md backdrop-blur-sm hover:bg-white text-gray-600 transition-all duration-200"
+                        aria-label="View details"
                       >
-                        <HiOutlineViewGrid className="text-xl" />
+                        <HiOutlineViewGrid className="text-xl md:text-2xl" />
                       </button>
 
                       <button
                         onClick={() => toggleCompare(product)}
-                        className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${compareList.some(item => item.id === product.id) ? 'text-blue-500' : 'text-gray-600'
+                        className={`p-3 rounded-full bg-white/90 shadow-md backdrop-blur-sm hover:bg-white transition-all duration-200 ${compareList.some(item => item.id === product.id) ? 'text-blue-500' : 'text-gray-600'
                           }`}
+                        aria-label="Compare product"
                       >
-                        <FaCodeCompare className="text-xl" />
+                        <FaCodeCompare className="text-xl md:text-2xl" />
                       </button>
 
                       {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
                         <button
                           onClick={() => handleRemoveProduct(product.id)}
-                          className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200
-                            }`}
+                          className={`p-3 rounded-full bg-white/90 shadow-md backdrop-blur-sm hover:bg-white transition-all duration-200`}
+                          aria-label="Remove product"
                         >
-                          <IoIosCloseCircle className="text-xl" />
+                          <IoIosCloseCircle className="text-xl md:text-2xl" />
                         </button>
                       )}
 
