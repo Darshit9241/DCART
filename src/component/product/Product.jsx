@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { addItem } from '../../redux/cartSlice';
 import { addToWishlist, removeFromWishlist } from '../../redux/wishlistSlice';
-import products from "../ProductData";
+// import products from "../ProductData";
 import { toast } from 'react-toastify';
 import { addToCompare, removeFromCompare } from '../../redux/compareSlice';
 import { removeProduct } from '../../redux/productSlice'; // Import this
@@ -52,7 +52,6 @@ export default function Product({ onCartClick, onCartOpen }) {
   //   ...product,
   //   isFavorite: false, // Initial favorite state
   // })));
-  // console.log('productStates: ====1', productStates);
 
   const productStates = useSelector((state) => state.products);;
 
@@ -168,29 +167,9 @@ export default function Product({ onCartClick, onCartOpen }) {
                       </button>
 
                       <button
-                        onClick={(e) => {
-                          if (e.type === 'click') {
-                            toggleCompare(product);
-                          }
-                        }}
+                        onClick={() => toggleCompare(product)}
                         className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${compareList.some(item => item.id === product.id) ? 'text-blue-500' : 'text-gray-600'
-                          } touch-manipulation cursor-pointer`}
-                        style={{ 
-                          WebkitTapHighlightColor: 'transparent',
-                          touchAction: 'manipulation'
-                        }}
-                        onTouchStart={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          toggleCompare(product);
-                        }}
-                        onPointerDown={(e) => {
-                          // This will work on most modern browsers
-                          if (e.pointerType === 'touch') {
-                            e.preventDefault();
-                            toggleCompare(product);
-                          }
-                        }}
+                          }`}
                       >
                         <FaCodeCompare className="text-xl" />
                       </button>
