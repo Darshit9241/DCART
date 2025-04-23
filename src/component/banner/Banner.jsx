@@ -6,13 +6,13 @@ export default function Banner() {
 
   return (
     <div className="bg-gradient-to-r from-[#f0f0f0] to-[#e7e7e7] flex flex-col md:flex-row items-center justify-between px-6 md:px-20 lg:px-44 py-16 md:py-0 h-auto md:h-[670px] relative overflow-hidden">
-      
+
       {/* Left Section */}
       <div className="flex-1 flex flex-col justify-center md:pr-10 text-center md:text-left">
         <span className="inline-block bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded-full mb-4 w-max mx-auto md:mx-0">
           Trending 2025
         </span>
-        
+
         <h2 className="font-medium text-gray-600 text-lg md:text-xl">
           Premium Ergonomic Collection
         </h2>
@@ -26,10 +26,11 @@ export default function Banner() {
 
         <button
           onClick={() => navigate(`/product`)}
-          className="mt-6 px-5 py-3 bg-gradient-to-r from-[#FF7004] to-[#FF9F4A] text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition duration-300 w-[140px] md:w-[160px]"
+          className="mt-6 px-5 py-3 bg-gradient-to-r from-[#FF7004] to-[#FF9F4A] text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition duration-300 w-[140px] md:w-[160px] mx-auto md:mx-0"
         >
           Shop Now
         </button>
+
       </div>
 
       {/* Right Section */}
