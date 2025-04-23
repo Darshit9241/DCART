@@ -22,7 +22,11 @@ export default function Product({ onCartClick, onCartOpen }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
 
-  const handleViewDetails = (product) => {
+  const handleViewDetails = (e, product) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     setSelectedProduct(product);
     setShowModal(true);
   };
@@ -33,7 +37,9 @@ export default function Product({ onCartClick, onCartOpen }) {
   };
 
   const toggleCompare = (e, product) => {
+    e.preventDefault(); // Prevent default behavior
     e.stopPropagation(); // Prevent event bubbling
+    
     const isCompared = compareList.some(item => item.id === product.id);
     if (isCompared) {
       dispatch(removeFromCompare(product));
@@ -54,16 +60,7 @@ export default function Product({ onCartClick, onCartOpen }) {
   //   isFavorite: false, // Initial favorite state
   // })));
 
-  // const productStates = useSelector((state) => state.products);;
-  const productsFromStore = useSelector((state) => state.products);
-
-  const [productStates, setProductStates] = useState(() =>
-    productsFromStore.map(product => ({
-      ...product,
-      isFavorite: false,
-    }))
-  );
-
+  const productStates = useSelector((state) => state.products);;
 
   const handleRemoveProduct = (productId) => {
     dispatch(removeProduct(productId)); // Update Redux state
@@ -85,6 +82,7 @@ export default function Product({ onCartClick, onCartOpen }) {
 
   // Function to toggle favorite status
   const toggleFavorite = (e, product) => {
+    e.preventDefault(); // Prevent default behavior
     e.stopPropagation(); // Prevent event bubbling
     const isWished = wishlist.some(item => item.id === product.id);
     if (isWished) {
@@ -147,93 +145,99 @@ export default function Product({ onCartClick, onCartOpen }) {
             const isWished = wishlist.some(item => item.id === product.id);
 
             return (
-              <div key={product.id} className="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
+                <div key={product.id} className="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
 
-                <div className="relative">
-                  <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-2xl">
-                    <img
-                      onClick={() => navigate(`/product/${product.id}`)}
-                      src={product.imgSrc}
-                      alt={product.alt}
-                      // className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
-                      className="w-full h-[300px] object-cover transform group-hover:scale-105 transition-transform duration-300 cursor-pointer"
-                    />
-                  </div>
-
-
-                  <div className="absolute top-4 right-4 flex flex-col gap-2">
-                    <button
-                      onClick={(e) => toggleFavorite(e, product)}
-                      className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${isWished ? 'text-red-500' : 'text-gray-600'
-                        }`}
-                    >
-                      {isWished ? <FaHeart className="text-xl" /> : <FaRegHeart className="text-xl" />}
-                    </button>
-
-                    <button
-                      onClick={() => handleViewDetails(product)}
-                      className="p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white text-gray-600 transition-all duration-200"
-                    >
-                      <HiOutlineViewGrid className="text-xl" />
-                    </button>
-
-                    <button
-                      onClick={(e) => toggleCompare(e, product)}
-                      className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${compareList.some(item => item.id === product.id) ? 'text-blue-500' : 'text-gray-600'
-                        }`}
-                    >
-                      <FaCodeCompare className="text-xl" />
-                    </button>
-
-                    {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
-                      <button
-                        onClick={() => handleRemoveProduct(product.id)}
-                        className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200
-                            }`}
-                      >
-                        <IoIosCloseCircle className="text-xl" />
-                      </button>
-                    )}
-
-                  </div>
-
-                  {product?.discount && (
-                    <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded shadow-lg">
-                      {product.discount} OFF
+                  <div className="relative">
+                    <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-2xl">
+                      <img
+                        onClick={() => navigate(`/product/${product.id}`)}
+                        onTouchEnd={(e) => {
+                          e.preventDefault();
+                          navigate(`/product/${product.id}`);
+                        }}
+                        src={product.imgSrc}
+                        alt={product.alt}
+                        className="w-full h-[300px] object-cover transform group-hover:scale-105 transition-transform duration-300 cursor-pointer"
+                      />
                     </div>
-                  )}
 
-                  <button
-                    onClick={() => handleAddToCart(product)}
-                    className="m-3 rounded-2xl absolute bottom-0 left-0 right-0 bg-black text-white py-3 text-center font-medium transform translate-y-0 group-hover:translate-y-0 transition-transform duration-300"
-                  >
-                    Add to Cart
-                  </button>
-                </div>
 
-                <div className="p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{product.name}</h3>
-                  <div className="flex items-center gap-3">
-                    {typeof product.oldPrice === "number" && product.oldPrice > 0 && (
-                      <span className="text-gray-400 line-through">${product.oldPrice.toFixed(2)}</span>
+                    <div className="absolute top-4 right-4 flex flex-col gap-2">
+                      <button
+                        onClick={(e) => toggleFavorite(e, product)}
+                        onTouchEnd={(e) => toggleFavorite(e, product)}
+                        className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${isWished ? 'text-red-500' : 'text-gray-600'
+                          }`}
+                      >
+                        {isWished ? <FaHeart className="text-xl" /> : <FaRegHeart className="text-xl" />}
+                      </button>
+
+                      <button
+                        onClick={(e) => handleViewDetails(e, product)}
+                        onTouchEnd={(e) => handleViewDetails(e, product)}
+                        className="p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white text-gray-600 transition-all duration-200"
+                      >
+                        <HiOutlineViewGrid className="text-xl" />
+                      </button>
+
+                      <button
+                        onClick={(e) => toggleCompare(e, product)}
+                        onTouchEnd={(e) => toggleCompare(e, product)}
+                        className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${compareList.some(item => item.id === product.id) ? 'text-blue-500' : 'text-gray-600'
+                          }`}
+                      >
+                        <FaCodeCompare className="text-xl" />
+                      </button>
+
+                      {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
+                        <button
+                          onClick={() => handleRemoveProduct(product.id)}
+                          className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200
+                            }`}
+                        >
+                          <IoIosCloseCircle className="text-xl" />
+                        </button>
+                      )}
+
+                    </div>
+
+                    {product?.discount && (
+                      <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded shadow-lg">
+                        {product.discount} OFF
+                      </div>
                     )}
-                    {typeof product.price === "number" && (
-                      <span className="text-xl font-bold text-gray-900">${product.price.toFixed(2)}</span>
-                    )}
+
+                    <button
+                      onClick={() => handleAddToCart(product)}
+                      className="m-3 rounded-2xl absolute bottom-0 left-0 right-0 bg-black text-white py-3 text-center font-medium transform translate-y-0 group-hover:translate-y-0 transition-transform duration-300"
+                    >
+                      Add to Cart
+                    </button>
                   </div>
-                </div>
 
-                {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
-                  <button
-                    onClick={() => handleRemoveProduct(product.id)}
-                    className="absolute top-2 left-2 p-1.5 bg-black text-white rounded-full hover:bg-gray-800 transition-colors duration-200"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                )}
-              </div>
+                  <div className="p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">{product.name}</h3>
+                    <div className="flex items-center gap-3">
+                      {typeof product.oldPrice === "number" && product.oldPrice > 0 && (
+                        <span className="text-gray-400 line-through">${product.oldPrice.toFixed(2)}</span>
+                      )}
+                      {typeof product.price === "number" && (
+                        <span className="text-xl font-bold text-gray-900">${product.price.toFixed(2)}</span>
+                      )}
+                    </div>
+                  </div>
+
+                  {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
+                    <button
+                      onClick={() => handleRemoveProduct(product.id)}
+                      className="absolute top-2 left-2 p-1.5 bg-black text-white rounded-full hover:bg-gray-800 transition-colors duration-200"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
             );
           })}
         </div>
