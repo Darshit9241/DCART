@@ -37,7 +37,7 @@ function Box({ onCartOpen }) {
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             whileHover={{ scale: 1.05, boxShadow: '0px 4px 12px rgba(0,0,0,0.2)' }}
-            className="fixed right-0 top-[350px] transform -translate-y-1/2 z-50 cursor-pointer bg-[#292b2c] backdrop-blur-md shadow-lg p-4 rounded-l-2xl w-32 text-white"
+            className=" fixed right-0 top-[350px] transform -translate-y-1/2 z-50 cursor-pointer bg-[#292b2c] backdrop-blur-md shadow-lg p-4 rounded-l-2xl w-32 text-white"
         >
             <div style={{ color: "#FF7A04" }} className="flex justify-center items-center mb-2">
                 <svg className="w-8 h-8 animate-pulse" stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round"

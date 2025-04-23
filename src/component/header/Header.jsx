@@ -65,7 +65,7 @@ export default function Header() {
   const handleLogInClick = () => {
     navigate("/login");
     setIsProfileMenuOpen(false);
-
+    setIsMobileMenuOpen(false)
   };
 
   const handleLogout = () => {
@@ -342,7 +342,11 @@ export default function Header() {
               {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
                 <div className="px-4 py-3 border-t border-gray-200">
                   <button
-                    onClick={() => navigate(`/addproduct`)}
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      navigate('/addproduct');
+                    }}
+
                     className="w-full px-4 py-2 text-sm text-white bg-[#2F333A] rounded-md hover:bg-[#444848] transition-colors duration-200"
                   >
                     Add Product
