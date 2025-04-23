@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { addItem } from '../../redux/cartSlice';
 import { addToWishlist, removeFromWishlist } from '../../redux/wishlistSlice';
-// import products from "../ProductData";
+import products from "../ProductData";
 import { toast } from 'react-toastify';
 import { addToCompare, removeFromCompare } from '../../redux/compareSlice';
 import { removeProduct } from '../../redux/productSlice'; // Import this
@@ -52,8 +52,10 @@ export default function Product({ onCartClick, onCartOpen }) {
     ...product,
     isFavorite: false, // Initial favorite state
   })));
+  console.log('productStates: ====1', productStates);
 
-  // const productStates = useSelector((state) => state.products);;
+  // const productStates1 = useSelector((state) => state.products);;
+  // console.log('productStates =====2: ', productStates1);
 
   const handleRemoveProduct = (productId) => {
     dispatch(removeProduct(productId)); // Update Redux state
