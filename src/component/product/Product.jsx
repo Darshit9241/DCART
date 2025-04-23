@@ -55,7 +55,6 @@ export default function Product({ onCartClick, onCartOpen }) {
   // console.log('productStates: ====1', productStates);
 
   const productStates1 = useSelector((state) => state.products);;
-  console.log('productStates =====2: ', productStates1);
 
   const handleRemoveProduct = (productId) => {
     dispatch(removeProduct(productId)); // Update Redux state
