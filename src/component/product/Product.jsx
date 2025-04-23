@@ -48,13 +48,13 @@ export default function Product() {
   };
 
 
-  const [productStates, setProductStates] = useState(products.map(product => ({
-    ...product,
-    isFavorite: false, // Initial favorite state
-  })));
-  console.log('setProductStates: ', setProductStates);
+  // const [productStates, setProductStates] = useState(products.map(product => ({
+  //   ...product,
+  //   isFavorite: false, // Initial favorite state
+  // })));
+  // console.log('setProductStates: ', setProductStates);
 
-  // const productStates = useSelector((state) => state.products);;
+  const productStates = useSelector((state) => state.products);;
 
   const handleRemoveProduct = (productId) => {
     dispatch(removeProduct(productId)); // Update Redux state
