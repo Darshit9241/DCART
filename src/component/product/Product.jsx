@@ -7,13 +7,13 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { addItem } from '../../redux/cartSlice';
 import { addToWishlist, removeFromWishlist } from '../../redux/wishlistSlice';
-// import products from "../ProductData";
+import products from "../ProductData";
 import { toast } from 'react-toastify';
 import { addToCompare, removeFromCompare } from '../../redux/compareSlice';
-import { removeProduct } from '../../redux/productSlice'; // Import this
-import { IoIosCloseCircle } from "react-icons/io";
+import { removeProduct } from '../../redux/productSlice'; // 👈 Import this
 
-export default function Product({ onCartClick, onCartOpen }) {
+
+export default function Product() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const wishlist = useSelector((state) => state.wishlist);
@@ -32,8 +32,7 @@ export default function Product({ onCartClick, onCartOpen }) {
     setSelectedProduct(null);
   };
 
-  const toggleCompare = (e, product) => {
-    e.stopPropagation(); // Prevent event bubbling
+  const toggleCompare = (product) => {
     const isCompared = compareList.some(item => item.id === product.id);
     if (isCompared) {
       dispatch(removeFromCompare(product));
@@ -49,12 +48,13 @@ export default function Product({ onCartClick, onCartOpen }) {
   };
 
 
-  // const [productStates, setProductStates] = useState(products.map(product => ({
-  //   ...product,
-  //   isFavorite: false, // Initial favorite state
-  // })));
+  const [productStates, setProductStates] = useState(products.map(product => ({
+    ...product,
+    isFavorite: false, // Initial favorite state
+  })));
+  console.log('setProductStates: ', setProductStates);
 
-  const productStates = useSelector((state) => state.products);;
+  // const productStates = useSelector((state) => state.products);;
 
   const handleRemoveProduct = (productId) => {
     dispatch(removeProduct(productId)); // Update Redux state
@@ -62,21 +62,13 @@ export default function Product({ onCartClick, onCartOpen }) {
   };
 
   const handleAddToCart = (product) => {
-    const userEmail = localStorage.getItem("userEmail");
-    if (!userEmail) {
-      navigate("/login")
-      return; // Exit the function if the user is not logged in
-    }
-
     dispatch(addItem({ ...product, quantity: 1 }));
-    toast.success("Product added from cart section.");
-    // onCartClick();
+    toast.success(`Add Product Succesfully`);
     // onCartOpen();
   };
 
   // Function to toggle favorite status
-  const toggleFavorite = (e, product) => {
-    e.stopPropagation(); // Prevent event bubbling
+  const toggleFavorite = (product) => {
     const isWished = wishlist.some(item => item.id === product.id);
     if (isWished) {
       dispatch(removeFromWishlist(product));
@@ -101,8 +93,6 @@ export default function Product({ onCartClick, onCartOpen }) {
     );
   });
 
-  // Sort products by id in descending order (newest first)
-  const sortedProducts = [...filteredProducts].sort((a, b) => b.id - a.id);
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
@@ -134,96 +124,84 @@ export default function Product({ onCartClick, onCartOpen }) {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {sortedProducts.map((product) => {
+          {filteredProducts.map((product) => {
             const isWished = wishlist.some(item => item.id === product.id);
 
             return (
-                <div key={product.id} className="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
+              <div key={product.id} className="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
+                <div className="relative">
+                  <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-2xl">
+                    <img
+                      onClick={() => navigate(`/product/${product.id}`)}
+                      src={product.imgSrc}
+                      alt={product.alt}
+                      // className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-[300px] object-cover transform group-hover:scale-105 transition-transform duration-300 cursor-pointer"
+                    />
+                  </div>
 
-                  <div className="relative">
-                    <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-2xl">
-                      <img
-                        onClick={() => navigate(`/product/${product.id}`)}
-                        src={product.imgSrc}
-                        alt={product.alt}
-                        // className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
-                        className="w-full h-[300px] object-cover transform group-hover:scale-105 transition-transform duration-300 cursor-pointer"
-                      />
-                    </div>
-
-
-                    <div className="absolute top-4 right-4 flex flex-col gap-2">
-                      <button
-                        onClick={(e) => toggleFavorite(e, product)}
-                        className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${isWished ? 'text-red-500' : 'text-gray-600'
-                          }`}
-                      >
-                        {isWished ? <FaHeart className="text-xl" /> : <FaRegHeart className="text-xl" />}
-                      </button>
-
-                      <button
-                        onClick={() => handleViewDetails(product)}
-                        className="p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white text-gray-600 transition-all duration-200"
-                      >
-                        <HiOutlineViewGrid className="text-xl" />
-                      </button>
-
-                      <button
-                        onClick={(e) => toggleCompare(e, product)}
-                        className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${compareList.some(item => item.id === product.id) ? 'text-blue-500' : 'text-gray-600'
-                          }`}
-                      >
-                        <FaCodeCompare className="text-xl" />
-                      </button>
-
-                      {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
-                        <button
-                          onClick={() => handleRemoveProduct(product.id)}
-                          className="p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 text-gray-600"
-                        >
-                          <IoIosCloseCircle className="text-xl" />
-                        </button>
-                      )}
-
-                    </div>
-
-                    {product?.discount && (
-                      <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded shadow-lg">
-                        {product.discount} OFF
-                      </div>
-                    )}
+                  <div className="absolute top-4 right-4 flex flex-col gap-2">
+                    <button
+                      onClick={() => toggleFavorite(product)}
+                      className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${isWished ? 'text-red-500' : 'text-gray-600'
+                        }`}
+                    >
+                      {isWished ? <FaHeart className="text-xl" /> : <FaRegHeart className="text-xl" />}
+                    </button>
 
                     <button
-                      onClick={() => handleAddToCart(product)}
-                      className="m-3 rounded-2xl absolute bottom-0 left-0 right-0 bg-black text-white py-3 text-center font-medium transform translate-y-0 group-hover:translate-y-0 transition-transform duration-300"
+                      onClick={() => handleViewDetails(product)}
+                      className="p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white text-gray-600 transition-all duration-200"
                     >
-                      Add to Cart
+                      <HiOutlineViewGrid className="text-xl" />
+                    </button>
+
+                    <button
+                      onClick={() => toggleCompare(product)}
+                      className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${compareList.some(item => item.id === product.id) ? 'text-blue-500' : 'text-gray-600'
+                        }`}
+                    >
+                      <FaCodeCompare className="text-xl" />
                     </button>
                   </div>
 
-                  <div className="p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">{product.name}</h3>
-                    <div className="flex items-center gap-3">
-                      {typeof product.oldPrice === "number" && product.oldPrice > 0 && (
-                        <span className="text-gray-400 line-through">${product.oldPrice.toFixed(2)}</span>
-                      )}
-                      {typeof product.price === "number" && (
-                        <span className="text-xl font-bold text-gray-900">${product.price.toFixed(2)}</span>
-                      )}
+                  {product?.discount && (
+                    <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded shadow-lg">
+                      {product.discount} OFF
                     </div>
-                  </div>
-
-                  {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
-                    <button
-                      onClick={() => handleRemoveProduct(product.id)}
-                      className="absolute top-2 left-2 p-1.5 bg-black text-white rounded-full hover:bg-gray-800 transition-colors duration-200"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
                   )}
+
+                  <button
+                    onClick={() => handleAddToCart(product)}
+                    className="absolute bottom-0 left-0 right-0 bg-black text-white py-3 text-center font-medium transform translate-y-0 group-hover:translate-y-0 transition-transform duration-300"
+                  >
+                    Add to Cart
+                  </button>
                 </div>
+
+                <div className="p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{product.name}</h3>
+                  <d v className="flex items-center gap-3">
+                    {typeof product.oldPrice === "number" && (
+                      <span className="text-gray-400 line-through">${product.oldPrice.toFixed(2)}</span>
+                    )}
+                    {typeof product.price === "number" && (
+                      <span className="text-xl font-bold text-gray-900">${product.price.toFixed(2)}</span>
+                    )}
+                  </d>
+                </div>
+
+                {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
+                  <button
+                    onClick={() => handleRemoveProduct(product.id)}
+                    className="absolute top-2 left-2 p-1.5 bg-black text-white rounded-full hover:bg-gray-800 transition-colors duration-200"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
+              </div>
             );
           })}
         </div>
