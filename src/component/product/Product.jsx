@@ -33,7 +33,6 @@ export default function Product({ onCartClick, onCartOpen }) {
   };
 
   const toggleCompare = (e, product) => {
-    e.preventDefault(); // Prevent default behavior
     e.stopPropagation(); // Prevent event bubbling
     const isCompared = compareList.some(item => item.id === product.id);
     if (isCompared) {
@@ -77,9 +76,7 @@ export default function Product({ onCartClick, onCartOpen }) {
 
   // Function to toggle favorite status
   const toggleFavorite = (e, product) => {
-    e.preventDefault(); // Prevent default behavior
     e.stopPropagation(); // Prevent event bubbling
-    
     const isWished = wishlist.some(item => item.id === product.id);
     if (isWished) {
       dispatch(removeFromWishlist(product));
@@ -158,7 +155,6 @@ export default function Product({ onCartClick, onCartOpen }) {
                     <div className="absolute top-4 right-4 flex flex-col gap-2">
                       <button
                         onClick={(e) => toggleFavorite(e, product)}
-                        onTouchStart={(e) => toggleFavorite(e, product)}
                         className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${isWished ? 'text-red-500' : 'text-gray-600'
                           }`}
                       >
@@ -167,10 +163,6 @@ export default function Product({ onCartClick, onCartOpen }) {
 
                       <button
                         onClick={() => handleViewDetails(product)}
-                        onTouchStart={(e) => {
-                          e.preventDefault();
-                          handleViewDetails(product);
-                        }}
                         className="p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white text-gray-600 transition-all duration-200"
                       >
                         <HiOutlineViewGrid className="text-xl" />
@@ -178,7 +170,6 @@ export default function Product({ onCartClick, onCartOpen }) {
 
                       <button
                         onClick={(e) => toggleCompare(e, product)}
-                        onTouchStart={(e) => toggleCompare(e, product)}
                         className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${compareList.some(item => item.id === product.id) ? 'text-blue-500' : 'text-gray-600'
                           }`}
                       >
@@ -204,10 +195,6 @@ export default function Product({ onCartClick, onCartOpen }) {
 
                     <button
                       onClick={() => handleAddToCart(product)}
-                      onTouchStart={(e) => {
-                        e.preventDefault();
-                        handleAddToCart(product);
-                      }}
                       className="m-3 rounded-2xl absolute bottom-0 left-0 right-0 bg-black text-white py-3 text-center font-medium transform translate-y-0 group-hover:translate-y-0 transition-transform duration-300"
                     >
                       Add to Cart
