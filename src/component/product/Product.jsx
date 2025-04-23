@@ -33,6 +33,7 @@ export default function Product({ onCartClick, onCartOpen }) {
   };
 
   const toggleCompare = (e, product) => {
+    e.preventDefault(); // Prevent default behavior
     e.stopPropagation(); // Prevent event bubbling
     const isCompared = compareList.some(item => item.id === product.id);
     if (isCompared) {
@@ -76,6 +77,7 @@ export default function Product({ onCartClick, onCartOpen }) {
 
   // Function to toggle favorite status
   const toggleFavorite = (e, product) => {
+    e.preventDefault(); // Prevent default behavior
     e.stopPropagation(); // Prevent event bubbling
     const isWished = wishlist.some(item => item.id === product.id);
     if (isWished) {
@@ -155,32 +157,52 @@ export default function Product({ onCartClick, onCartOpen }) {
                     <div className="absolute top-4 right-4 flex flex-col gap-2">
                       <button
                         onClick={(e) => toggleFavorite(e, product)}
-                        className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${isWished ? 'text-red-500' : 'text-gray-600'
-                          }`}
+                        onTouchStart={(e) => toggleFavorite(e, product)}
+                        className={`p-3 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${isWished ? 'text-red-500' : 'text-gray-600'
+                          } touch-manipulation z-10`}
                       >
                         {isWished ? <FaHeart className="text-xl" /> : <FaRegHeart className="text-xl" />}
                       </button>
 
                       <button
-                        onClick={() => handleViewDetails(product)}
-                        className="p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white text-gray-600 transition-all duration-200"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleViewDetails(product);
+                        }}
+                        onTouchStart={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleViewDetails(product);
+                        }}
+                        className="p-3 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white text-gray-600 transition-all duration-200 touch-manipulation z-10"
                       >
                         <HiOutlineViewGrid className="text-xl" />
                       </button>
 
                       <button
                         onClick={(e) => toggleCompare(e, product)}
-                        className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${compareList.some(item => item.id === product.id) ? 'text-blue-500' : 'text-gray-600'
-                          }`}
+                        onTouchStart={(e) => toggleCompare(e, product)}
+                        className={`p-3 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${compareList.some(item => item.id === product.id) ? 'text-blue-500' : 'text-gray-600'
+                          } touch-manipulation z-10`}
                       >
                         <FaCodeCompare className="text-xl" />
                       </button>
 
                       {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
                         <button
-                          onClick={() => handleRemoveProduct(product.id)}
-                          className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${compareList.some(item => item.id === product.id) ? 'text-blue-500' : 'text-gray-600'
-                            }`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleRemoveProduct(product.id);
+                          }}
+                          onTouchStart={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleRemoveProduct(product.id);
+                          }}
+                          className={`p-3 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${compareList.some(item => item.id === product.id) ? 'text-blue-500' : 'text-gray-600'
+                            } touch-manipulation z-10`}
                         >
                           <IoIosCloseCircle className="text-xl" />
                         </button>
