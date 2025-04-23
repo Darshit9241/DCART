@@ -168,9 +168,29 @@ export default function Product({ onCartClick, onCartOpen }) {
                       </button>
 
                       <button
-                        onClick={() => toggleCompare(product)}
+                        onClick={(e) => {
+                          if (e.type === 'click') {
+                            toggleCompare(product);
+                          }
+                        }}
                         className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${compareList.some(item => item.id === product.id) ? 'text-blue-500' : 'text-gray-600'
-                          }`}
+                          } touch-manipulation cursor-pointer`}
+                        style={{ 
+                          WebkitTapHighlightColor: 'transparent',
+                          touchAction: 'manipulation'
+                        }}
+                        onTouchStart={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          toggleCompare(product);
+                        }}
+                        onPointerDown={(e) => {
+                          // This will work on most modern browsers
+                          if (e.pointerType === 'touch') {
+                            e.preventDefault();
+                            toggleCompare(product);
+                          }
+                        }}
                       >
                         <FaCodeCompare className="text-xl" />
                       </button>
