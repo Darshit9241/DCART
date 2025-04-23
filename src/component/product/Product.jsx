@@ -32,7 +32,8 @@ export default function Product({ onCartClick, onCartOpen }) {
     setSelectedProduct(null);
   };
 
-  const toggleCompare = (product) => {
+  const toggleCompare = (e, product) => {
+    e.stopPropagation(); // Prevent event bubbling
     const isCompared = compareList.some(item => item.id === product.id);
     if (isCompared) {
       dispatch(removeFromCompare(product));
@@ -74,7 +75,8 @@ export default function Product({ onCartClick, onCartOpen }) {
   };
 
   // Function to toggle favorite status
-  const toggleFavorite = (product) => {
+  const toggleFavorite = (e, product) => {
+    e.stopPropagation(); // Prevent event bubbling
     const isWished = wishlist.some(item => item.id === product.id);
     if (isWished) {
       dispatch(removeFromWishlist(product));
@@ -152,7 +154,7 @@ export default function Product({ onCartClick, onCartOpen }) {
 
                     <div className="absolute top-4 right-4 flex flex-col gap-2">
                       <button
-                        onClick={() => toggleFavorite(product)}
+                        onClick={(e) => toggleFavorite(e, product)}
                         className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${isWished ? 'text-red-500' : 'text-gray-600'
                           }`}
                       >
@@ -167,7 +169,7 @@ export default function Product({ onCartClick, onCartOpen }) {
                       </button>
 
                       <button
-                        onClick={() => toggleCompare(product)}
+                        onClick={(e) => toggleCompare(e, product)}
                         className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${compareList.some(item => item.id === product.id) ? 'text-blue-500' : 'text-gray-600'
                           }`}
                       >
