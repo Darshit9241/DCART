@@ -171,30 +171,30 @@ const PaymentPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4 sm:p-6">
-      <div className="w-full max-w-4xl bg-white shadow-2xl rounded-2xl p-4 sm:p-8 space-y-6 sm:space-y-8 animate-fadeIn">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-2 sm:p-4 md:p-6">
+      <div className="w-full max-w-4xl bg-white shadow-2xl rounded-2xl p-3 sm:p-4 md:p-8 space-y-4 sm:space-y-6 md:space-y-8 animate-fadeIn">
         <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold text-gray-800 flex items-center justify-center gap-2">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 flex items-center justify-center gap-2">
             <span>Checkout</span>
             <span className="text-blue-500">🛒</span>
           </h1>
-          <p className="text-gray-600">Complete your purchase securely</p>
-          <div className="flex items-center justify-center gap-2 mt-4 text-green-600 text-sm">
+          <p className="text-sm sm:text-base text-gray-600">Complete your purchase securely</p>
+          <div className="flex items-center justify-center gap-2 mt-2 sm:mt-4 text-green-600 text-xs sm:text-sm">
             <FaShieldAlt />
             <span>Secure Payment</span>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
           {/* Left Column - Personal Information */}
-          <div className="space-y-6">
-            <div className="bg-gray-50 p-6 rounded-xl space-y-6 shadow-sm">
-              <h2 className="text-2xl font-semibold text-gray-800 flex items-center gap-2">
+          <div className="space-y-4 sm:space-y-6">
+            <div className="bg-gray-50 p-3 sm:p-4 md:p-6 rounded-xl space-y-4 sm:space-y-6 shadow-sm">
+              <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 flex items-center gap-2">
                 <FaLock className="text-green-500" />
                 Personal Details
               </h2>
               
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {['name', 'city', 'state'].map((field) => (
                   <div key={field}>
                     <label htmlFor={field} className="block text-gray-700 font-medium text-sm mb-2">
@@ -272,7 +272,7 @@ const PaymentPage = () => {
 
             {/* Order Information Section */}
             <div className="bg-gray-50 p-6 rounded-xl space-y-4 shadow-sm">
-              <h2 className="text-2xl font-semibold text-gray-800 flex items-center gap-2">
+              <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 flex items-center gap-2">
                 <FaShoppingBag className="text-blue-500" />
                 Your Cart
               </h2>
@@ -320,7 +320,7 @@ const PaymentPage = () => {
           <div className="space-y-6">
             {/* Payment Method Selection */}
             <div className="bg-gray-50 p-6 rounded-xl">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+              <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-3 sm:mb-4 flex items-center gap-2">
                 <span className="text-blue-500">💳</span> Payment Method
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -360,7 +360,7 @@ const PaymentPage = () => {
 
             {/* Credit Card Form */}
             {paymentMethod === 'credit-card' && (
-              <div className="bg-gray-50 p-6 rounded-xl space-y-4 animate-fadeIn">
+              <div className="bg-gray-50 p-3 sm:p-4 md:p-6 rounded-xl space-y-3 sm:space-y-4 animate-fadeIn">
                 <div>
                   <label className="block text-gray-700 font-medium text-sm mb-2">Card Number</label>
                   <input
@@ -392,7 +392,7 @@ const PaymentPage = () => {
 
             {/* Order Summary */}
             <div className="bg-gray-50 p-6 rounded-xl">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+              <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-3 sm:mb-4 flex items-center gap-2">
                 <span className="text-blue-500">📋</span> Order Summary
               </h2>
               <div className="space-y-3">
@@ -434,17 +434,17 @@ const PaymentPage = () => {
               <h2 className="text-lg font-semibold text-gray-800 mb-2 flex items-center gap-2">
                 <span className="text-blue-500">🎟️</span> Promo Code
               </h2>
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <input
                   type="text"
                   value={couponCode}
                   onChange={(e) => setCouponCode(e.target.value)}
                   placeholder="Enter coupon code"
-                  className="flex-1 px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm"
+                  className="flex-1 px-3 sm:px-4 py-2 sm:py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm"
                 />
                 <button
                   onClick={handleOpenCouponModal}
-                  className="px-6 py-3 bg-gradient-to-r from-[#FF7004] to-[#FF9F4A] text-white rounded-lg hover:shadow-lg hover:opacity-90 transition-all duration-200 font-medium shadow-sm"
+                  className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-[#FF7004] to-[#FF9F4A] text-white rounded-lg hover:shadow-lg hover:opacity-90 transition-all duration-200 font-medium shadow-sm"
                 >
                   Apply
                 </button>
@@ -476,7 +476,7 @@ const PaymentPage = () => {
         {/* Submit Button */}
         <button
           type="button"
-          className={`w-full bg-gradient-to-r from-[#FF7004] to-[#FF9F4A] text-white py-4 rounded-xl transition-all duration-300 font-semibold text-lg shadow-md hover:shadow-lg hover:from-[#FF6000] hover:to-[#FF9040] ${
+          className={`w-full bg-gradient-to-r from-[#FF7004] to-[#FF9F4A] text-white py-3 sm:py-4 rounded-xl transition-all duration-300 font-semibold text-base sm:text-lg shadow-md hover:shadow-lg hover:from-[#FF6000] hover:to-[#FF9040] ${
             isPlacingOrder ? 'opacity-75 cursor-not-allowed' : 'transform hover:-translate-y-1'
           }`}
           onClick={handlePlaceOrder}
@@ -495,8 +495,7 @@ const PaymentPage = () => {
           )}
         </button>
 
-        <style jsx>{`
-          @keyframes fadeIn {
+        <style jsx>{`          @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
           }
@@ -524,3 +523,4 @@ const PaymentPage = () => {
 };
 
 export default PaymentPage;
+
