@@ -82,7 +82,10 @@ export default function App() {
         cartItems={cartItems}
       />
 
+      <div className="hidden md:flex">
       <Box onCartOpen={handleOpenCart} />
+      </div>
+
       <div className="mt-20">
         <Footer />
       </div>
