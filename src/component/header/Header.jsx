@@ -1085,7 +1085,7 @@ export default function Header() {
                   <div className="grid grid-cols-3 gap-2 p-2 mb-3">
                     <button
                       onClick={handleCartClick}
-                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:bg-orange-50  transition-colors mobile-menu-btn"
+                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-orange-50 transition-colors mobile-menu-btn"
                     >
                       <div className="relative">
                         <FaShoppingBag className="text-xl text-gray-700 mb-1" />
@@ -1100,7 +1100,7 @@ export default function Header() {
                     
                     <button
                       onClick={handleWishList}
-                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:bg-orange-50  transition-colors mobile-menu-btn"
+                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-orange-50 transition-colors mobile-menu-btn"
                     >
                       <div className="relative">
                         <FaHeart className="text-xl text-gray-700 mb-1" />
@@ -1118,7 +1118,7 @@ export default function Header() {
                         setIsNotificationsOpen(!isNotificationsOpen);
                         setIsMobileMenuOpen(false);
                       }}
-                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:bg-orange-50  transition-colors mobile-menu-btn"
+                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-orange-50 transition-colors mobile-menu-btn"
                     >
                       <div className="relative">
                         <IoNotificationsOutline className="text-xl text-gray-700 mb-1" />
@@ -1132,10 +1132,10 @@ export default function Header() {
                     </button>
                   </div>
                   
-                  <div className="grid grid-cols-3 gap-2 p-2 mb-4">
+                  <div className="grid grid-cols-2 gap-2 p-2 mb-4">
                     <button
                       onClick={handleCompareList}
-                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:bg-orange-50  transition-colors mobile-menu-btn"
+                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-orange-50 transition-colors mobile-menu-btn"
                     >
                       <div className="relative">
                         <IoMdGitCompare className="text-xl text-gray-700 mb-1" />
@@ -1153,51 +1153,10 @@ export default function Header() {
                         navigate("/view-all-order");
                         setIsMobileMenuOpen(false);
                       }}
-                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:bg-orange-50  transition-colors mobile-menu-btn"
+                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-orange-50 transition-colors mobile-menu-btn"
                     >
                       <FiPackage className="text-xl text-gray-700 mb-1" />
                       <span className="text-sm font-medium">Orders</span>
-                    </button>
-                    
-                    <button
-                      onClick={toggleDarkMode}
-                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:bg-orange-50  transition-colors mobile-menu-btn"
-                    >
-                      {darkMode ? (
-                        <>
-                          <FaSun className="text-xl text-gray-700 mb-1" />
-                          <span className="text-sm font-medium">Light</span>
-                        </>
-                      ) : (
-                        <>
-                          <FaMoon className="text-xl text-gray-700 mb-1" />
-                          <span className="text-sm font-medium">Dark</span>
-                        </>
-                      )}
-                    </button>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-2 p-2 mb-4">
-                    <button
-                      onClick={() => {
-                        handleQrScanner();
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:bg-orange-50  transition-colors mobile-menu-btn"
-                    >
-                      <FaQrcode className="text-xl text-gray-700 mb-1" />
-                      <span className="text-sm font-medium">QR Scan</span>
-                    </button>
-                    
-                    <button
-                      onClick={() => {
-                        setIsSearchModalOpen(true);
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:bg-orange-50  transition-colors mobile-menu-btn"
-                    >
-                      <BiSearch className="text-xl text-gray-700 mb-1" />
-                      <span className="text-sm font-medium">Search</span>
                     </button>
                   </div>
                   
