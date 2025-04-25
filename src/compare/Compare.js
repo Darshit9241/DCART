@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeFromCompare, clearCompare } from '../redux/compareSlice';
 import { MdDelete } from "react-icons/md";
@@ -90,6 +90,10 @@ const Compare = () => {
     const compareList = useSelector((state) => state.compare);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []); 
 
     const handleRemoveProduct = (product) => {
         dispatch(removeFromCompare(product));

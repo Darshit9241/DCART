@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
     removeItem,
@@ -14,6 +14,9 @@ const Cart = () => {
     const cartItems = useSelector((state) => state.cart.items);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []); 
 
     const handleRemoveItem = (index) => {
         dispatch(removeItem({ index }));

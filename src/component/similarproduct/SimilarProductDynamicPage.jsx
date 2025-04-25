@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { addToWishlist, removeFromWishlist } from '../../redux/wishlistSlice';
 
-function SimilarProduct() {
+function SimilarProductDynamicPage() {
     const productStates = useSelector((state) => state.products);;
     console.log('productStates: ', productStates);
     const scrollRef = useRef(null);
@@ -120,4 +120,4 @@ function SimilarProduct() {
     );
 }
 
-export default SimilarProduct;
+export default SimilarProductDynamicPage;

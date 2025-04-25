@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeFromWishlist, clearWishlist } from '../redux/wishlistSlice';
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +15,10 @@ const WishList = ({ onCartOpen }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [sortBy, setSortBy] = useState('name');
     const [filterPrice, setFilterPrice] = useState('all');
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []); 
 
     const handleClearCart = async () => {
         try {

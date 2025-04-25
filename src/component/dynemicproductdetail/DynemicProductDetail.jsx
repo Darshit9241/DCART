@@ -7,7 +7,7 @@ import { FaHeart, FaRegHeart, FaTruck, FaShieldAlt, FaUndo, FaStar, FaStarHalfAl
 import { FaCodeCompare, FaCircleCheck, FaChevronRight } from "react-icons/fa6";
 import { addItem } from "../../redux/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
-import SimilarProduct from "../similarproduct/SimilarProduct";
+import SimilarProductDynamicPage from "../similarproduct/SimilarProductDynamicPage";
 
 export default function DynamicProductDetail({ onCartClick, onCartOpen }) {
     const { id } = useParams();
@@ -586,7 +586,7 @@ export default function DynamicProductDetail({ onCartClick, onCartOpen }) {
             </div>
 
             {/* Related Products Section */}
-            <SimilarProduct />
+            <SimilarProductDynamicPage />
 
             {/* Mobile Sticky Add to Cart Bar */}
             <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-10">

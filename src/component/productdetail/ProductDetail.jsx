@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToWishlist, removeFromWishlist } from '../../redux/wishlistSlice';
 import { addToCompare, removeFromCompare } from "../../redux/compareSlice";
 import { toast } from "react-toastify";
+import SimilarProductStaticPage from "../similarproduct/SimilarProductStaticPage";
 
 // Tab component for product details
 const Tabs = ({ tabs, activeTab, setActiveTab }) => {
@@ -19,11 +20,10 @@ const Tabs = ({ tabs, activeTab, setActiveTab }) => {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`inline-block py-4 px-6 text-sm font-medium ${
-              activeTab === tab.id
+            className={`inline-block py-4 px-6 text-sm font-medium ${activeTab === tab.id
                 ? "text-[#FF7004] border-b-2 border-[#FF7004]"
                 : "text-gray-500 hover:text-gray-700 hover:border-gray-300"
-            }`}
+              }`}
           >
             {tab.label}
           </button>
@@ -42,7 +42,7 @@ const StarRating = ({ rating }) => {
   const stars = [];
   const fullStars = Math.floor(rating);
   const hasHalfStar = rating % 1 >= 0.5;
-  
+
   for (let i = 1; i <= 5; i++) {
     if (i <= fullStars) {
       stars.push(<FaStar key={i} className="text-yellow-400" />);
@@ -52,7 +52,7 @@ const StarRating = ({ rating }) => {
       stars.push(<FaRegStar key={i} className="text-yellow-400" />);
     }
   }
-  
+
   return <div className="flex">{stars}</div>;
 };
 
@@ -63,8 +63,8 @@ const Carousel = ({ images }) => {
 
 
   useEffect(() => {
-          window.scrollTo(0, 0);
-      }, []); 
+    window.scrollTo(0, 0);
+  }, []);
 
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev + 1) % images.length);
@@ -78,11 +78,11 @@ const Carousel = ({ images }) => {
 
   const handleMouseMove = (e) => {
     if (!isZoomed) return;
-    
+
     const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - left) / width) * 100;
     const y = ((e.clientY - top) / height) * 100;
-    
+
     setZoomPosition({ x, y });
   };
 
@@ -92,12 +92,12 @@ const Carousel = ({ images }) => {
 
   return (
     <div className="relative w-full max-w-md mx-auto">
-      <div 
+      <div
         className="overflow-hidden relative"
         onClick={toggleZoom}
         onMouseMove={handleMouseMove}
       >
-        <div 
+        <div
           className={`transition-all duration-300 ${isZoomed ? "scale-150 cursor-zoom-out" : "cursor-zoom-in"}`}
           style={isZoomed ? { transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%` } : {}}
         >
@@ -152,11 +152,11 @@ export default function ProductDetail({ onCartOpen, onCartClick }) {
   useEffect(() => {
     const fetchedProduct = fetchProductById(productId);
     setProduct(fetchedProduct);
-    
+
     // Fetch related products (mock implementation)
     if (fetchedProduct) {
-      const related = products.filter(p => 
-        p.id !== fetchedProduct.id && 
+      const related = products.filter(p =>
+        p.id !== fetchedProduct.id &&
         p.category === fetchedProduct.category
       ).slice(0, 4);
       setRelatedProducts(related);
@@ -187,19 +187,19 @@ export default function ProductDetail({ onCartOpen, onCartClick }) {
       toast.warning("Please select a size");
       return;
     }
-    
+
     if (selectedColor === "Select Color") {
       toast.warning("Please select a color");
       return;
     }
-    
-    dispatch(addItem({ 
-      ...product, 
+
+    dispatch(addItem({
+      ...product,
       quantity,
       selectedColor,
       selectedSize: selectedSize || "One Size"
     }));
-    
+
     toast.success(`${product.name} added to cart`);
     onCartClick();
     onCartOpen();
@@ -250,7 +250,7 @@ export default function ProductDetail({ onCartOpen, onCartClick }) {
 
   const colors = ["Red", "Blue", "Green", "Black"];
   const sizes = ["S", "M", "L", "XL", "XXL"];
-  
+
   // Product detail tabs content
   const tabs = [
     { id: "description", label: "Description" },
@@ -312,7 +312,7 @@ export default function ProductDetail({ onCartOpen, onCartClick }) {
               <StarRating rating={4.7} />
               <span className="ml-2 text-gray-700">4.7 out of 5</span>
             </div>
-            
+
             <div className="space-y-4 mt-6">
               {/* Sample reviews */}
               {[1, 2, 3].map((index) => (
@@ -332,7 +332,7 @@ export default function ProductDetail({ onCartOpen, onCartClick }) {
                 </div>
               ))}
             </div>
-            
+
             <button className="mt-4 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded">
               Write a Review
             </button>
@@ -410,9 +410,8 @@ export default function ProductDetail({ onCartOpen, onCartClick }) {
                 {sizes.map((size) => (
                   <div
                     key={size}
-                    className={`w-10 h-10 border-2 cursor-pointer flex items-center justify-center rounded ${
-                      selectedSize === size ? "border-[#FF7004] text-[#FF7004]" : "border-gray-300 hover:border-gray-400"
-                    }`}
+                    className={`w-10 h-10 border-2 cursor-pointer flex items-center justify-center rounded ${selectedSize === size ? "border-[#FF7004] text-[#FF7004]" : "border-gray-300 hover:border-gray-400"
+                      }`}
                     onClick={() => handleSizeChange(size)}
                   >
                     {size}
@@ -428,9 +427,8 @@ export default function ProductDetail({ onCartOpen, onCartClick }) {
                 {colors.map((color) => (
                   <div
                     key={color}
-                    className={`w-8 h-8 rounded-full border-2 cursor-pointer flex items-center justify-center transition-all ${
-                      selectedColor === color ? "border-[#FF7004] scale-110" : "border-gray-300 hover:scale-105"
-                    }`}
+                    className={`w-8 h-8 rounded-full border-2 cursor-pointer flex items-center justify-center transition-all ${selectedColor === color ? "border-[#FF7004] scale-110" : "border-gray-300 hover:scale-105"
+                      }`}
                     style={{ backgroundColor: color.toLowerCase() }}
                     onClick={() => handleColorChange(color)}
                   >
@@ -445,15 +443,15 @@ export default function ProductDetail({ onCartOpen, onCartClick }) {
             {/* Quantity + Add to Cart + Buy Now */}
             <div className="flex flex-wrap gap-4 pt-6 items-center">
               <div className="bg-gray-100 text-gray-800 flex items-center text-xl rounded-md border border-gray-300">
-                <button 
-                  onClick={decrementQuantity} 
+                <button
+                  onClick={decrementQuantity}
                   className="px-3 py-2 hover:bg-gray-200 transition-colors"
                 >
                   -
                 </button>
                 <div className="px-3 py-2 min-w-[40px] text-center">{quantity}</div>
-                <button 
-                  onClick={incrementQuantity} 
+                <button
+                  onClick={incrementQuantity}
                   className="px-3 py-2 hover:bg-gray-200 transition-colors"
                 >
                   +
@@ -478,27 +476,25 @@ export default function ProductDetail({ onCartOpen, onCartClick }) {
             {/* Wishlist, Compare, Share */}
             <div className="flex gap-5 pt-5 items-center">
               <div
-                className={`cursor-pointer transition-all duration-300 flex items-center gap-1 ${
-                  isWished ? "text-red-500" : "text-gray-500 hover:text-red-500"
-                }`}
+                className={`cursor-pointer transition-all duration-300 flex items-center gap-1 ${isWished ? "text-red-500" : "text-gray-500 hover:text-red-500"
+                  }`}
                 onClick={() => toggleFavorite(product)}
               >
                 {isWished ? <FaHeart className="text-xl" /> : <FaRegHeart className="text-xl" />}
                 <span className="text-sm">Wishlist</span>
               </div>
-              
+
               <div
-                className={`cursor-pointer transition-all duration-300 flex items-center gap-1 ${
-                  compareList.some((item) => item.id === product.id)
+                className={`cursor-pointer transition-all duration-300 flex items-center gap-1 ${compareList.some((item) => item.id === product.id)
                     ? "text-blue-500"
                     : "text-gray-500 hover:text-blue-500"
-                }`}
+                  }`}
                 onClick={() => toggleCompare(product)}
               >
                 <FaCodeCompare className="text-xl" />
                 <span className="text-sm">Compare</span>
               </div>
-              
+
               <div className="relative">
                 <div
                   className="cursor-pointer transition-all duration-300 text-gray-500 hover:text-green-500 flex items-center gap-1"
@@ -507,7 +503,7 @@ export default function ProductDetail({ onCartOpen, onCartClick }) {
                   <FaShare className="text-xl" />
                   <span className="text-sm">Share</span>
                 </div>
-                
+
                 {showShareOptions && (
                   <div className="absolute top-full left-0 mt-2 bg-white shadow-lg rounded-md p-2 z-10 flex gap-2">
                     <button onClick={() => shareProduct("Facebook")} className="text-blue-600 hover:text-blue-800 p-2">
@@ -525,7 +521,7 @@ export default function ProductDetail({ onCartOpen, onCartClick }) {
             </div>
           </div>
         </div>
-        
+
         {/* Product Information Tabs */}
         <div className="mt-16">
           <Tabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -533,9 +529,12 @@ export default function ProductDetail({ onCartOpen, onCartClick }) {
             {renderTabContent()}
           </div>
         </div>
-        
+
         {/* Related Products */}
-        {relatedProducts.length > 0 && (
+
+        <SimilarProductStaticPage />
+
+        {/* {relatedProducts.length > 0 && (
           <div className="mt-16">
             <h2 className="text-2xl font-bold mb-6">Related Products</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -562,7 +561,7 @@ export default function ProductDetail({ onCartOpen, onCartClick }) {
               ))}
             </div>
           </div>
-        )}
+        )} */}
       </div>
 
       {/* Sticky Add to Cart for Mobile */}
