@@ -21,6 +21,10 @@ export default function DynamicProductDetail({ onCartClick, onCartOpen }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+      }, []);  // This will run only once when the component is mounted
+
     // Sample product images for gallery
     const productImages = [
         product?.imgSrc,
@@ -95,7 +99,7 @@ export default function DynamicProductDetail({ onCartClick, onCartOpen }) {
         const token = localStorage.getItem("token");
         if (token) {
             // Navigate directly to payment page
-            navigate('/orderinfo/payment');
+            navigate('/cart/payment');
         } else {
             // Navigate to login if not logged in
             toast.info("Please login to continue with purchase");

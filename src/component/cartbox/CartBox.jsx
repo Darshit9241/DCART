@@ -4,7 +4,7 @@ import { MdOutlineClose, MdDelete, MdAdd, MdRemove } from "react-icons/md";
 import { removeItem, incrementQuantity, decrementQuantity, clearCart } from '../../redux/cartSlice';
 import { useNavigate } from "react-router-dom";
 
-const Cart = ({ isOpen, closeSidebar }) => {
+const CartBox = ({ isOpen, closeSidebar }) => {
   const cartRef = useRef();
   const cartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
@@ -51,8 +51,8 @@ const Cart = ({ isOpen, closeSidebar }) => {
     }, 0).toFixed(2);
   };
 
-  const handleNavigateToOrderInfo = () => {
-    navigate('/orderinfo');
+  const handleNavigateToCart = () => {
+    navigate('/cart');
     closeSidebar()
   };
 
@@ -204,7 +204,7 @@ const Cart = ({ isOpen, closeSidebar }) => {
             <p className="text-sm text-gray-500 text-right">Including all taxes and discounts</p>
           </div>
           <button
-            onClick={handleNavigateToOrderInfo}
+            onClick={handleNavigateToCart}
             className="w-full bg-gradient-to-r from-[#FF7004] to-[#FF9F4A] text-white py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
           >
             Proceed to Checkout
@@ -215,4 +215,4 @@ const Cart = ({ isOpen, closeSidebar }) => {
   );
 };
 
-export default Cart;
+export default CartBox;

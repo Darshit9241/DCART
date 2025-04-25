@@ -4,7 +4,7 @@ import { MdCancel } from 'react-icons/md';
 import { FaBox, FaMapMarkerAlt, FaUser, FaCreditCard, FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
-const AllOrdersPage = () => {
+const ViewAllOrder = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -102,7 +102,7 @@ const AllOrdersPage = () => {
   };
 
   const handleViewDetailPage = (order) => {
-    navigate('/orderinfo/payment/order-detail', { state: order });
+    navigate('/order-detail', { state: order });
   };
 
   const filteredOrders = orders.filter(order => {
@@ -464,4 +464,4 @@ const AllOrdersPage = () => {
   );
 };
 
-export default AllOrdersPage;
+export default ViewAllOrder;

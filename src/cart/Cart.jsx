@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { MdDelete, MdAdd, MdRemove, MdShoppingCart } from 'react-icons/md';
 import { toast } from 'react-toastify';
 
-const OrderInfo = () => {
+const Cart = () => {
     const cartItems = useSelector((state) => state.cart.items);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -32,7 +32,7 @@ const OrderInfo = () => {
 
     const handleNavigateToPaymentPage = () => {
         if (cartItems.length > 0) {
-            navigate('/orderinfo/payment');
+            navigate('/cart/payment');
         }
     };
 
@@ -220,4 +220,4 @@ const OrderInfo = () => {
     );
 };
 
-export default OrderInfo;
+export default Cart;

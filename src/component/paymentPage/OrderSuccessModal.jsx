@@ -103,7 +103,7 @@ const OrderSuccessModal = ({ orderDetails, onClose }) => {
             Close
           </button>
           <button
-            onClick={() => navigate('/orderinfo/payment/order-detail', { state: orderDetails })}
+            onClick={() => navigate('/order-detail', { state: orderDetails })}
             className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-[#FF7004] to-[#FF9F4A] text-white rounded-md hover:opacity-90 transition duration-300"
           >
             View Details

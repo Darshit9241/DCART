@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 import { loadGooglePayScript, initializeGooglePay, processGooglePayment } from './GooglePayService';
 import { loadPayPalScript, renderPayPalButtons } from './PayPalService';
 
-const PaymentPage = () => {
+const Payment = () => {
   const [paymentMethod, setPaymentMethod] = useState('credit-card');
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [showOrderSuccessModal, setShowOrderSuccessModal] = useState(false);
@@ -706,5 +706,5 @@ const PaymentPage = () => {
   );
 };
 
-export default PaymentPage;
+export default Payment;
 

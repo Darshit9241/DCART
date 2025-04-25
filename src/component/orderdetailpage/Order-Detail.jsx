@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { FaBox, FaMapMarkerAlt, FaUser,   FaShoppingBag, FaCreditCard } from 'react-icons/fa';
 import { MdArrowBack } from 'react-icons/md';
 
-const OrderDetailsPage = () => {
+const OrderDetails = () => {
   const location = useLocation();
   const orderDetails = location.state;
   const navigate = useNavigate();
@@ -40,7 +40,7 @@ const OrderDetailsPage = () => {
         {/* Header with back button */}
         <div className="flex items-center mb-6">
           <button 
-            onClick={() => navigate('/orderinfo/payment')}
+            onClick={() => navigate('/cart/payment')}
             className="mr-4 p-2 rounded-full bg-white shadow-md hover:bg-gray-100 transition-colors"
           >
             <MdArrowBack className="text-gray-700 text-xl" />
@@ -151,7 +151,7 @@ const OrderDetailsPage = () => {
                 Continue Shopping
               </button>
               <button
-                onClick={() => navigate('/allorderspage')}
+                onClick={() => navigate('/view-all-order')}
                 className="px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors shadow-md"
               >
                 View All Orders
@@ -164,4 +164,4 @@ const OrderDetailsPage = () => {
   );
 };
 
-export default OrderDetailsPage;
+export default OrderDetails;
