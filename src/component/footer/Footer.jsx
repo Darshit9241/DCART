@@ -14,7 +14,7 @@ const Footer = () => {
 
           {/* Logo & Description */}
           <div>
-            <h2 className="text-white text-2xl font-bold mb-3">Kakadiya InfoTech</h2>
+            <h2 className="text-white text-2xl font-bold mb-3">Dcrt InfoTech</h2>
             <p className="text-sm text-gray-400">
               Delivering smart solutions that power your digital dreams. We specialize in full-stack development, UI/UX, and scalable applications.
             </p>
@@ -65,7 +65,7 @@ const Footer = () => {
         {/* Social Media */}
         <div className="mt-10 border-t border-gray-800 pt-6 flex flex-col sm:flex-row items-center justify-between">
           <p className="text-sm text-gray-500 text-center sm:text-left">
-            &copy; {new Date().getFullYear()} Kakadiya InfoTech. All rights reserved.
+            &copy; {new Date().getFullYear()} Dcrt InfoTech. All rights reserved.
           </p>
           <div className="flex space-x-4 mt-4 sm:mt-0">
             <a href="#" className="hover:text-white"><FaFacebookF /></a>
