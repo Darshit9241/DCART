@@ -23,7 +23,7 @@ export default function DynamicProductDetail({ onCartClick, onCartOpen }) {
 
     useEffect(() => {
         window.scrollTo(0, 0);
-      }, []);  // This will run only once when the component is mounted
+    }, []);  // This will run only once when the component is mounted
 
     // Sample product images for gallery
     const productImages = [
@@ -94,7 +94,7 @@ export default function DynamicProductDetail({ onCartClick, onCartOpen }) {
             selectedColor,
             selectedSize
         }));
-        
+
         // Check if user is logged in
         const token = localStorage.getItem("token");
         if (token) {
@@ -415,11 +415,11 @@ export default function DynamicProductDetail({ onCartClick, onCartOpen }) {
                                     >
                                         Add to Cart
                                     </button>
-                                    <button 
+                                    <button
                                         onClick={handleBuyNow}
                                         className="flex-1 bg-white border border-[#FF7004] text-[#FF9F4A] py-3 px-6 rounded-lg font-medium transition-colors hover:bg-indigo-50 flex items-center justify-center gap-2"
                                     >
-                                        Buy Now 
+                                        Buy Now
                                     </button>
                                 </div>
 
@@ -586,7 +586,7 @@ export default function DynamicProductDetail({ onCartClick, onCartOpen }) {
             </div>
 
             {/* Related Products Section */}
-             <SimilarProduct />
+            <SimilarProduct />
 
             {/* Mobile Sticky Add to Cart Bar */}
             <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-10">

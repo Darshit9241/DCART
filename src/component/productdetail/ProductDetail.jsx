@@ -61,6 +61,11 @@ const Carousel = ({ images }) => {
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
 
+
+  useEffect(() => {
+          window.scrollTo(0, 0);
+      }, []); 
+
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev + 1) % images.length);
     setIsZoomed(false);
