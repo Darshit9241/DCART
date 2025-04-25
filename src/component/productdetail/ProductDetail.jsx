@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaHeart, FaRegHeart, FaStar, FaStarHalfAlt, FaRegStar, FaShoppingCart } from "react-icons/fa";
 import { FaCodeCompare, FaShare } from "react-icons/fa6";
 import { AiOutlineTwitter, AiFillFacebook, AiFillInstagram } from "react-icons/ai";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import products from "../ProductData";
 import { addItem } from "../../redux/cartSlice";
 import { useDispatch, useSelector } from "react-redux";

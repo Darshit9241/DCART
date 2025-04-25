@@ -262,41 +262,48 @@ export default function Header() {
                   onClick={handleCartClick}
                   className="relative flex flex-col items-center justify-center p-3 bg-white rounded-lg shadow-sm hover:bg-orange-50 transition-colors duration-200"
                 >
-                  <FaShoppingBag className="text-2xl text-gray-700" />
+                  <div className="relative">
+                    <FaShoppingBag className="text-2xl text-gray-700" />
+                    {cartItemCount > 0 && localStorage.getItem("token") && (
+                      <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                        {cartItemCount}
+                      </span>
+                    )}
+                  </div>
                   <span className="mt-1 text-sm text-gray-600">Cart</span>
-                  {cartItemCount > 0 && localStorage.getItem("token") && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                      {cartItemCount}
-                    </span>
-                  )}
                 </button>
+
 
                 <button
                   onClick={handleWishList}
                   className="relative flex flex-col items-center justify-center p-3 bg-white rounded-lg shadow-sm hover:bg-orange-50 transition-colors duration-200"
                 >
-                  <FaHeart className="text-2xl text-gray-700" />
+                  <div className="relative">
+                    <FaHeart className="text-2xl text-gray-700" />
+                    {wishlistCount > 0 && localStorage.getItem("token") && (
+                      <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                        {wishlistCount}
+                      </span>
+                    )}
+                  </div>
                   <span className="mt-1 text-sm text-gray-600">Wishlist</span>
-                  {wishlistCount > 0 && localStorage.getItem("token") && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                      {wishlistCount}
-                    </span>
-                  )}
                 </button>
+
 
                 <button
                   onClick={handleCompareList}
                   className="relative flex flex-col items-center justify-center p-3 bg-white rounded-lg shadow-sm hover:bg-orange-50 transition-colors duration-200"
                 >
-                  <IoMdGitCompare className="text-2xl text-gray-700" />
+                  <div className="relative">
+                    <IoMdGitCompare className="text-2xl text-gray-700" />
+                    {compareCount > 0 && localStorage.getItem("token") && (
+                      <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                        {compareCount}
+                      </span>
+                    )}
+                  </div>
                   <span className="mt-1 text-sm text-gray-600">Compare</span>
-                  {compareCount > 0 && localStorage.getItem("token") && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                      {compareCount}
-                    </span>
-                  )}
                 </button>
-
 
                 <button
                   onClick={() => {
@@ -308,6 +315,17 @@ export default function Header() {
                   <FiPackage className="text-2xl text-gray-700" />
                   <span className="mt-1 text-sm text-gray-600">Orders</span>
                 </button>
+
+                {/* <button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    navigate("/Coupon");
+                  }}
+                  className="flex flex-col items-center justify-center p-3 bg-white rounded-lg shadow-sm hover:bg-orange-50 transition-colors duration-200"
+                >
+                  <FaTicketAlt className="text-2xl text-gray-700" />
+                  <span className="mt-1 text-sm text-gray-600">Coupon</span>
+                </button> */}
               </div>
 
               <div className="px-4 py-3 border-t border-gray-200">
