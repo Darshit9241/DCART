@@ -96,6 +96,59 @@ style.textContent = `
   .animate-slide-in-up {
     animation: slideInUp 0.3s ease-out forwards;
   }
+  
+  /* Voice recording animation */
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 0.8;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  .animate-pulse {
+    animation: pulse 1.5s infinite;
+  }
+  
+  /* Dark mode styles */
+  .dark {
+    color-scheme: dark;
+  }
+  
+  .dark body {
+    background-color: #1a1a1a;
+    color: #f3f4f6;
+  }
+  
+  .dark .bg-white {
+    background-color: #1a1a1a;
+  }
+  
+  .dark .text-gray-700 {
+    color: #d1d5db;
+  }
+  
+  .dark .text-gray-500 {
+    color: #9ca3af;
+  }
+  
+  .dark .border-gray-100 {
+    border-color: #374151;
+  }
+  
+  .dark .border-gray-200 {
+    border-color: #374151;
+  }
+  
+  .dark .shadow-md {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  }
 `;
 document.head.appendChild(style);
 
@@ -1032,32 +1085,32 @@ export default function Header() {
                   <div className="grid grid-cols-3 gap-2 p-2 mb-3">
                     <button
                       onClick={handleCartClick}
-                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-orange-50 transition-colors mobile-menu-btn"
+                      className="flex flex-col items-center justify-center p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:bg-orange-50 dark:hover:bg-gray-700 transition-colors mobile-menu-btn"
                     >
                       <div className="relative">
-                        <FaShoppingBag className="text-xl text-gray-700 mb-1" />
+                        <FaShoppingBag className="text-xl text-gray-700 dark:text-gray-300 mb-1" />
                         {cartItemCount > 0 && localStorage.getItem("token") && (
                           <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                             {cartItemCount}
                           </span>
                         )}
                       </div>
-                      <span className="text-sm font-medium">Cart</span>
+                      <span className="text-sm font-medium dark:text-gray-300">Cart</span>
                     </button>
                     
                     <button
                       onClick={handleWishList}
-                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-orange-50 transition-colors mobile-menu-btn"
+                      className="flex flex-col items-center justify-center p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:bg-orange-50 dark:hover:bg-gray-700 transition-colors mobile-menu-btn"
                     >
                       <div className="relative">
-                        <FaHeart className="text-xl text-gray-700 mb-1" />
+                        <FaHeart className="text-xl text-gray-700 dark:text-gray-300 mb-1" />
                         {wishlistCount > 0 && localStorage.getItem("token") && (
                           <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                             {wishlistCount}
                           </span>
                         )}
                       </div>
-                      <span className="text-sm font-medium">Wishlist</span>
+                      <span className="text-sm font-medium dark:text-gray-300">Wishlist</span>
                     </button>
 
                     <button
@@ -1065,34 +1118,34 @@ export default function Header() {
                         setIsNotificationsOpen(!isNotificationsOpen);
                         setIsMobileMenuOpen(false);
                       }}
-                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-orange-50 transition-colors mobile-menu-btn"
+                      className="flex flex-col items-center justify-center p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:bg-orange-50 dark:hover:bg-gray-700 transition-colors mobile-menu-btn"
                     >
                       <div className="relative">
-                        <IoNotificationsOutline className="text-xl text-gray-700 mb-1" />
+                        <IoNotificationsOutline className="text-xl text-gray-700 dark:text-gray-300 mb-1" />
                         {getUnreadCount() > 0 && (
                           <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                             {getUnreadCount()}
                           </span>
                         )}
                       </div>
-                      <span className="text-sm font-medium">Alerts</span>
+                      <span className="text-sm font-medium dark:text-gray-300">Alerts</span>
                     </button>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-2 p-2 mb-4">
+                  <div className="grid grid-cols-3 gap-2 p-2 mb-4">
                     <button
                       onClick={handleCompareList}
-                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-orange-50 transition-colors mobile-menu-btn"
+                      className="flex flex-col items-center justify-center p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:bg-orange-50 dark:hover:bg-gray-700 transition-colors mobile-menu-btn"
                     >
                       <div className="relative">
-                        <IoMdGitCompare className="text-xl text-gray-700 mb-1" />
+                        <IoMdGitCompare className="text-xl text-gray-700 dark:text-gray-300 mb-1" />
                         {compareCount > 0 && localStorage.getItem("token") && (
                           <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                             {compareCount}
                           </span>
                         )}
                       </div>
-                      <span className="text-sm font-medium">Compare</span>
+                      <span className="text-sm font-medium dark:text-gray-300">Compare</span>
                     </button>
                     
                     <button
@@ -1100,10 +1153,51 @@ export default function Header() {
                         navigate("/view-all-order");
                         setIsMobileMenuOpen(false);
                       }}
-                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-orange-50 transition-colors mobile-menu-btn"
+                      className="flex flex-col items-center justify-center p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:bg-orange-50 dark:hover:bg-gray-700 transition-colors mobile-menu-btn"
                     >
-                      <FiPackage className="text-xl text-gray-700 mb-1" />
-                      <span className="text-sm font-medium">Orders</span>
+                      <FiPackage className="text-xl text-gray-700 dark:text-gray-300 mb-1" />
+                      <span className="text-sm font-medium dark:text-gray-300">Orders</span>
+                    </button>
+                    
+                    <button
+                      onClick={toggleDarkMode}
+                      className="flex flex-col items-center justify-center p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:bg-orange-50 dark:hover:bg-gray-700 transition-colors mobile-menu-btn"
+                    >
+                      {darkMode ? (
+                        <>
+                          <FaSun className="text-xl text-gray-700 dark:text-gray-300 mb-1" />
+                          <span className="text-sm font-medium dark:text-gray-300">Light</span>
+                        </>
+                      ) : (
+                        <>
+                          <FaMoon className="text-xl text-gray-700 dark:text-gray-300 mb-1" />
+                          <span className="text-sm font-medium dark:text-gray-300">Dark</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-2 p-2 mb-4">
+                    <button
+                      onClick={() => {
+                        handleQrScanner();
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="flex flex-col items-center justify-center p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:bg-orange-50 dark:hover:bg-gray-700 transition-colors mobile-menu-btn"
+                    >
+                      <FaQrcode className="text-xl text-gray-700 dark:text-gray-300 mb-1" />
+                      <span className="text-sm font-medium dark:text-gray-300">QR Scan</span>
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        setIsSearchModalOpen(true);
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="flex flex-col items-center justify-center p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:bg-orange-50 dark:hover:bg-gray-700 transition-colors mobile-menu-btn"
+                    >
+                      <BiSearch className="text-xl text-gray-700 dark:text-gray-300 mb-1" />
+                      <span className="text-sm font-medium dark:text-gray-300">Search</span>
                     </button>
                   </div>
                   
