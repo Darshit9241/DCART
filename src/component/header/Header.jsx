@@ -8,10 +8,11 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { FiPackage } from "react-icons/fi";
-import { FaSignInAlt, FaUserPlus, FaSignOutAlt, FaTicketAlt, FaKey, FaCamera } from "react-icons/fa";
+import { FaSignInAlt, FaUserPlus, FaSignOutAlt, FaTicketAlt, FaKey, FaCamera, FaMoon, FaSun, FaMicrophone, FaQrcode } from "react-icons/fa";
 import { BiSearch } from "react-icons/bi";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { IoEarth, IoChevronDown } from "react-icons/io5";
+import { useQRCode } from 'next-qrcode';
 
 // Add animation styles
 const style = document.createElement('style');
@@ -26,6 +27,127 @@ style.textContent = `
   }
   .animate-slide-in-left {
     animation: slideInLeft 0.3s ease-out forwards;
+  }
+  
+  /* Prevent body scrolling when mobile menu is open */
+  body.mobile-menu-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+  }
+  
+  /* Better scrollbar for mobile menu */
+  .mobile-menu-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(200, 200, 200, 0.7) transparent;
+    -webkit-overflow-scrolling: touch;
+  }
+  .mobile-menu-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .mobile-menu-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .mobile-menu-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(200, 200, 200, 0.7);
+    border-radius: 20px;
+  }
+  
+  /* Better touch interactions for mobile menu buttons */
+  .mobile-menu-btn {
+    -webkit-tap-highlight-color: transparent;
+  }
+  .mobile-menu-btn:active {
+    transform: scale(0.97);
+  }
+  
+  /* Add a safe area at the bottom for iOS */
+  @supports (padding-bottom: env(safe-area-inset-bottom)) {
+    .mobile-menu-footer {
+      padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+    }
+  }
+  
+  /* Improved animation for mobile menu */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+  
+  /* Search modal animation */
+  @keyframes slideInUp {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  .animate-slide-in-up {
+    animation: slideInUp 0.3s ease-out forwards;
+  }
+  
+  /* Voice recording animation */
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 0.8;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  .animate-pulse {
+    animation: pulse 1.5s infinite;
+  }
+  
+  /* Dark mode styles */
+  .dark {
+    color-scheme: dark;
+  }
+  
+  .dark body {
+    background-color: #1a1a1a;
+    color: #f3f4f6;
+  }
+  
+  .dark .bg-white {
+    background-color: #1a1a1a;
+  }
+  
+  .dark .text-gray-700 {
+    color: #d1d5db;
+  }
+  
+  .dark .text-gray-500 {
+    color: #9ca3af;
+  }
+  
+  .dark .border-gray-100 {
+    border-color: #374151;
+  }
+  
+  .dark .border-gray-200 {
+    border-color: #374151;
+  }
+  
+  .dark .shadow-md {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
   }
 `;
 document.head.appendChild(style);
@@ -48,13 +170,26 @@ export default function Header() {
     { id: 3, text: "Limited time offer: 20% off on all fashion items.", read: true, time: new Date(Date.now() - 172800000).toISOString() }
   ]);
   
+  // New states for modern features
+  const [darkMode, setDarkMode] = useState(false);
+  const [isVoiceSearchActive, setIsVoiceSearchActive] = useState(false);
+  const [isQrScannerOpen, setIsQrScannerOpen] = useState(false);
+  const [recentSearches, setRecentSearches] = useState([]);
+  const [popularSearches] = useState(['laptops', 'smartphones', 'headphones', 'watches', 'cameras']);
+  
   const profileMenuRef = useRef(null);
   const searchModalRef = useRef(null);
   const fileInputRef = useRef(null);
   const mobileMenuRef = useRef(null);
   const notificationsRef = useRef(null);
   const languageMenuRef = useRef(null);
+  const qrScannerRef = useRef(null);
   const navigate = useNavigate();
+  const { Canvas } = useQRCode();
+  
+  // For swipe gesture detection
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
 
   const cartItems = useSelector((state) => state.cart.items);
   const cartItemCount = cartItems.length;
@@ -67,6 +202,22 @@ export default function Header() {
 
   const userEmail = localStorage.getItem("userEmail");
   const username = userEmail ? userEmail.split("@")[0] : null;
+  
+  // Handle swipe gesture
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  
+  const handleTouchMove = (e) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+  
+  const handleTouchEnd = () => {
+    if (touchStartX.current - touchEndX.current > 100) {
+      // Swiped left, close the menu
+      setIsMobileMenuOpen(false);
+    }
+  };
 
   // Load user photo from localStorage
   useEffect(() => {
@@ -315,6 +466,9 @@ export default function Header() {
     e.preventDefault();
     if (searchQuery.trim()) {
       setIsSearching(true);
+      // Save search query to recent searches
+      saveToRecentSearches(searchQuery.trim());
+      
       // Mock search functionality - in a real app, this would call an API
       setTimeout(() => {
         setIsSearching(false);
@@ -328,6 +482,148 @@ export default function Header() {
     }
   };
 
+  // Prevent body scrolling when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.classList.add('mobile-menu-open');
+    } else {
+      document.body.classList.remove('mobile-menu-open');
+    }
+    
+    // Cleanup function
+    return () => {
+      document.body.classList.remove('mobile-menu-open');
+    };
+  }, [isMobileMenuOpen]);
+  
+  // Same for search modal
+  useEffect(() => {
+    if (isSearchModalOpen) {
+      document.body.classList.add('mobile-menu-open');
+    } else {
+      document.body.classList.remove('mobile-menu-open');
+    }
+    
+    return () => {
+      document.body.classList.remove('mobile-menu-open');
+    };
+  }, [isSearchModalOpen]);
+
+  // Load dark mode preference from localStorage
+  useEffect(() => {
+    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+    setDarkMode(savedDarkMode);
+    if (savedDarkMode) {
+      document.documentElement.classList.add('dark');
+    }
+  }, []);
+
+  // Update document class when dark mode changes
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('darkMode', 'true');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('darkMode', 'false');
+    }
+  }, [darkMode]);
+  
+  // Voice search functionality
+  const handleVoiceSearch = () => {
+    if (!('webkitSpeechRecognition' in window)) {
+      alert('Voice search is not supported in your browser');
+      return;
+    }
+    
+    setIsVoiceSearchActive(true);
+    
+    const recognition = new window.webkitSpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+    
+    recognition.onstart = () => {
+      // Show feedback that voice recognition is active
+    };
+    
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setSearchQuery(transcript);
+      // Auto-search after voice input
+      setTimeout(() => {
+        setIsVoiceSearchActive(false);
+        handleSearch({ preventDefault: () => {} });
+      }, 500);
+    };
+    
+    recognition.onerror = (event) => {
+      setIsVoiceSearchActive(false);
+      console.error('Speech recognition error', event.error);
+    };
+    
+    recognition.onend = () => {
+      setIsVoiceSearchActive(false);
+    };
+    
+    recognition.start();
+  };
+  
+  // QR code scanner handler
+  const handleQrScanner = () => {
+    setIsQrScannerOpen(true);
+    // In a real implementation, we would use the device camera to scan QR codes
+    // For demo purposes, we'll just show a modal that simulates scanning
+  };
+  
+  const handleQrResult = (result) => {
+    setIsQrScannerOpen(false);
+    // If result is a URL, navigate to it
+    if (result && result.startsWith('http')) {
+      window.open(result, '_blank');
+    } else if (result) {
+      // If it's a product ID or other data, handle appropriately
+      setSearchQuery(result);
+      handleSearch({ preventDefault: () => {} });
+    }
+  };
+  
+  // Toggle dark mode
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+  
+  // Save search to recent searches
+  const saveToRecentSearches = (query) => {
+    if (!query) return;
+    
+    const searches = [...recentSearches];
+    // Remove if already exists
+    const existingIndex = searches.findIndex(s => s === query);
+    if (existingIndex !== -1) {
+      searches.splice(existingIndex, 1);
+    }
+    // Add to beginning of array
+    searches.unshift(query);
+    // Keep only the most recent 5 searches
+    setRecentSearches(searches.slice(0, 5));
+    // Save to localStorage
+    localStorage.setItem('recentSearches', JSON.stringify(searches.slice(0, 5)));
+  };
+  
+  // Load recent searches from localStorage
+  useEffect(() => {
+    const savedSearches = localStorage.getItem('recentSearches');
+    if (savedSearches) {
+      try {
+        const parsedSearches = JSON.parse(savedSearches);
+        setRecentSearches(parsedSearches);
+      } catch (e) {
+        console.error('Failed to parse recent searches', e);
+      }
+    }
+  }, []);
+
   return (
     <>
       <div className="fixed top-0 left-0 right-0 bg-white py-3 z-50 shadow-md">
@@ -337,7 +633,7 @@ export default function Header() {
             <div className="md:hidden">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="text-gray-700 hover:text-orange-500 focus:outline-none"
+                className="text-gray-700 hover:text-orange-500 focus:outline-none p-2 -m-2 mobile-menu-btn"
                 aria-label="toggle-mobile-menu"
               >
                 {isMobileMenuOpen ? (
@@ -410,7 +706,28 @@ export default function Header() {
                   onClick={handleSearchModalOpen}
                   className="group"
                 >
-                  <BiSearch className="text-2xl text-gray-700 group-hover:text-orange-500 transition-colors duration-300" />
+                  <BiSearch className="text-2xl text-gray-700 group-hover:text-orange-500 transition-colors duration-300 dark:text-gray-300" />
+                </button>
+
+                {/* Dark Mode Toggle */}
+                <button
+                  onClick={toggleDarkMode}
+                  className="group"
+                  aria-label="Toggle dark mode"
+                >
+                  {darkMode ? (
+                    <FaSun className="text-2xl text-gray-700 group-hover:text-orange-500 transition-colors duration-300 dark:text-gray-300" />
+                  ) : (
+                    <FaMoon className="text-2xl text-gray-700 group-hover:text-orange-500 transition-colors duration-300" />
+                  )}
+                </button>
+
+                {/* QR Scanner Button */}
+                <button
+                  onClick={handleQrScanner}
+                  className="group"
+                >
+                  <FaQrcode className="text-2xl text-gray-700 group-hover:text-orange-500 transition-colors duration-300 dark:text-gray-300" />
                 </button>
 
                 {/* Notifications */}
@@ -663,66 +980,73 @@ export default function Header() {
 
         {/* Mobile Navigation Menu */}
         {isMobileMenuOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden" onClick={handleClickOutside}>
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden animate-fadeIn" onClick={handleClickOutside}>
             <div 
               ref={mobileMenuRef}
-              className="fixed left-0 top-0 h-full w-80 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out animate-slide-in-left overflow-hidden flex flex-col"
+              className="fixed left-0 top-0 h-full w-80 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out animate-slide-in-left flex flex-col"
               onClick={(e) => e.stopPropagation()}
+              style={{ maxWidth: '85%' }}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
             >
-              {/* Mobile Menu Header with logo and close button */}
-              <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-                <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center">
-                  <span className="text-2xl font-bold text-[#FF7004] font-dcart tracking-wider">DCART</span>
-                </Link>
-                <button
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100"
-                >
-                  <IoMdClose className="h-6 w-6" />
-                </button>
-              </div>
+              {/* Mobile Menu Header - Fixed */}
+              <div className="sticky top-0 z-10 bg-white">
+                {/* Mobile Menu Header with logo and close button */}
+                <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+                  <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center">
+                    <span className="text-2xl font-bold text-[#FF7004] font-dcart tracking-wider">DCART</span>
+                  </Link>
+                  <button
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100 mobile-menu-btn"
+                  >
+                    <IoMdClose className="h-6 w-6" />
+                  </button>
+                </div>
 
-              {/* User Profile Section - if logged in */}
-              {userEmail && (
-                <div className="px-4 py-5 bg-gradient-to-r from-orange-50 to-white">
-                  <div className="flex items-center space-x-4">
-                    <div 
-                      className="w-14 h-14 rounded-full overflow-hidden relative group cursor-pointer shadow-sm border-2 border-white"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        fileInputRef.current.click();
-                      }}
-                    >
-                      {(userPhoto || localStorage.getItem("userPhoto")) ? (
-                        <>
-                          <img 
-                            src={userPhoto || localStorage.getItem("userPhoto")} 
-                            alt="User" 
-                            className="w-full h-full object-cover"
-                            onError={(e) => {
-                              e.target.src = "https://via.placeholder.com/40";
-                            }}
-                          />
-                          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 flex items-center justify-center transition-all duration-200 opacity-0 group-hover:opacity-100">
-                            <FaCamera className="text-white text-lg" />
+                {/* User Profile Section - if logged in */}
+                {userEmail && (
+                  <div className="px-4 py-4 bg-gradient-to-r from-orange-50 to-white border-b border-gray-100">
+                    <div className="flex items-center space-x-4">
+                      <div 
+                        className="w-14 h-14 rounded-full overflow-hidden relative group cursor-pointer shadow-sm border-2 border-white mobile-menu-btn"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          fileInputRef.current.click();
+                        }}
+                      >
+                        {(userPhoto || localStorage.getItem("userPhoto")) ? (
+                          <>
+                            <img 
+                              src={userPhoto || localStorage.getItem("userPhoto")} 
+                              alt="User" 
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                e.target.src = "https://via.placeholder.com/40";
+                              }}
+                            />
+                            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 flex items-center justify-center transition-all duration-200 opacity-0 group-hover:opacity-100">
+                              <FaCamera className="text-white text-lg" />
+                            </div>
+                          </>
+                        ) : (
+                          <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                            <FaCamera className="text-gray-400" />
                           </div>
-                        </>
-                      ) : (
-                        <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                          <FaCamera className="text-gray-400" />
-                        </div>
-                      )}
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">Welcome To Dcart!</p>
-                      <p className="text-base font-semibold text-[#FF7004] truncate">{username}</p>
+                        )}
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">Welcome To Dcart!</p>
+                        <p className="text-base font-semibold text-[#FF7004] truncate">{username}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
 
-              {/* Main menu items */}
-              <div className="flex-grow overflow-y-auto py-2 px-2">
+              {/* Main menu items - Scrollable */}
+              <div className="flex-grow overflow-y-auto py-2 px-2 mobile-menu-scrollbar overscroll-contain">
                 <div className="space-y-1">
                   {/* Language/Currency Selector for Mobile */}
                   <div className="p-3 border-b border-gray-100">
@@ -761,7 +1085,7 @@ export default function Header() {
                   <div className="grid grid-cols-3 gap-2 p-2 mb-3">
                     <button
                       onClick={handleCartClick}
-                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-orange-50 transition-colors"
+                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:bg-orange-50  transition-colors mobile-menu-btn"
                     >
                       <div className="relative">
                         <FaShoppingBag className="text-xl text-gray-700 mb-1" />
@@ -776,7 +1100,7 @@ export default function Header() {
                     
                     <button
                       onClick={handleWishList}
-                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-orange-50 transition-colors"
+                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:bg-orange-50  transition-colors mobile-menu-btn"
                     >
                       <div className="relative">
                         <FaHeart className="text-xl text-gray-700 mb-1" />
@@ -794,7 +1118,7 @@ export default function Header() {
                         setIsNotificationsOpen(!isNotificationsOpen);
                         setIsMobileMenuOpen(false);
                       }}
-                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-orange-50 transition-colors"
+                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:bg-orange-50  transition-colors mobile-menu-btn"
                     >
                       <div className="relative">
                         <IoNotificationsOutline className="text-xl text-gray-700 mb-1" />
@@ -808,10 +1132,10 @@ export default function Header() {
                     </button>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-2 p-2 mb-4">
+                  <div className="grid grid-cols-3 gap-2 p-2 mb-4">
                     <button
                       onClick={handleCompareList}
-                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-orange-50 transition-colors"
+                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:bg-orange-50  transition-colors mobile-menu-btn"
                     >
                       <div className="relative">
                         <IoMdGitCompare className="text-xl text-gray-700 mb-1" />
@@ -829,10 +1153,51 @@ export default function Header() {
                         navigate("/view-all-order");
                         setIsMobileMenuOpen(false);
                       }}
-                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-orange-50 transition-colors"
+                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:bg-orange-50  transition-colors mobile-menu-btn"
                     >
                       <FiPackage className="text-xl text-gray-700 mb-1" />
                       <span className="text-sm font-medium">Orders</span>
+                    </button>
+                    
+                    <button
+                      onClick={toggleDarkMode}
+                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:bg-orange-50  transition-colors mobile-menu-btn"
+                    >
+                      {darkMode ? (
+                        <>
+                          <FaSun className="text-xl text-gray-700 mb-1" />
+                          <span className="text-sm font-medium">Light</span>
+                        </>
+                      ) : (
+                        <>
+                          <FaMoon className="text-xl text-gray-700 mb-1" />
+                          <span className="text-sm font-medium">Dark</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-2 p-2 mb-4">
+                    <button
+                      onClick={() => {
+                        handleQrScanner();
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:bg-orange-50  transition-colors mobile-menu-btn"
+                    >
+                      <FaQrcode className="text-xl text-gray-700 mb-1" />
+                      <span className="text-sm font-medium">QR Scan</span>
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        setIsSearchModalOpen(true);
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:bg-orange-50  transition-colors mobile-menu-btn"
+                    >
+                      <BiSearch className="text-xl text-gray-700 mb-1" />
+                      <span className="text-sm font-medium">Search</span>
                     </button>
                   </div>
                   
@@ -844,7 +1209,7 @@ export default function Header() {
                     <>
                       <button
                         onClick={handleSignInClick}
-                        className="w-full flex items-center gap-3 p-4 text-gray-700 hover:bg-orange-50 rounded-xl"
+                        className="w-full flex items-center gap-3 p-4 text-gray-700 hover:bg-orange-50 rounded-xl mobile-menu-btn"
                       >
                         <FaUserPlus className="text-lg text-gray-500" />
                         <span className="font-medium">Sign Up</span>
@@ -852,7 +1217,7 @@ export default function Header() {
 
                       <button
                         onClick={handleLogInClick}
-                        className="w-full flex items-center gap-3 p-4 text-gray-700 hover:bg-orange-50 rounded-xl"
+                        className="w-full flex items-center gap-3 p-4 text-gray-700 hover:bg-orange-50 rounded-xl mobile-menu-btn"
                       >
                         <FaSignInAlt className="text-lg text-gray-500" />
                         <span className="font-medium">Log In</span>
@@ -860,7 +1225,7 @@ export default function Header() {
 
                       <button
                         onClick={handleForgotPassword}
-                        className="w-full flex items-center gap-3 p-4 text-gray-700 hover:bg-orange-50 rounded-xl"
+                        className="w-full flex items-center gap-3 p-4 text-gray-700 hover:bg-orange-50 rounded-xl mobile-menu-btn"
                       >
                         <FaKey className="text-lg text-gray-500" />
                         <span className="font-medium">Forgot Password</span>
@@ -869,7 +1234,7 @@ export default function Header() {
                   ) : (
                     <button
                       onClick={handleLogout}
-                      className="w-full flex items-center gap-3 p-4 text-gray-700 hover:bg-orange-50 rounded-xl"
+                      className="w-full flex items-center gap-3 p-4 text-gray-700 hover:bg-orange-50 rounded-xl mobile-menu-btn"
                     >
                       <FaSignOutAlt className="text-lg text-gray-500" />
                       <span className="font-medium">Log Out</span>
@@ -881,23 +1246,26 @@ export default function Header() {
                       navigate("/Coupon");
                       setIsMobileMenuOpen(false);
                     }}
-                    className="w-full flex items-center gap-3 p-4 text-gray-700 hover:bg-orange-50 rounded-xl"
+                    className="w-full flex items-center gap-3 p-4 text-gray-700 hover:bg-orange-50 rounded-xl mobile-menu-btn"
                   >
                     <FaTicketAlt className="text-lg text-gray-500" />
                     <span className="font-medium">Coupon</span>
                   </button>
+                  
+                  {/* Add padding to ensure content scrolls properly on all screen sizes */}
+                  <div className="h-16"></div>
                 </div>
               </div>
               
-              {/* Admin section if admin user */}
+              {/* Admin section if admin user - Fixed at the bottom */}
               {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
-                <div className="p-4 border-t border-gray-200">
+                <div className="sticky bottom-0 p-4 border-t border-gray-200 bg-white z-10 mobile-menu-footer shadow-inner">
                   <button
                     onClick={() => {
                       navigate("/addproduct");
                       setIsMobileMenuOpen(false);
                     }}
-                    className="w-full flex items-center justify-center gap-2 p-3 bg-[#2F333A] text-white rounded-xl hover:bg-[#444848] transition-all"
+                    className="w-full flex items-center justify-center gap-2 p-3 bg-[#2F333A] text-white rounded-xl hover:bg-[#444848] transition-all mobile-menu-btn"
                   >
                     <span className="font-medium">Add Product</span>
                   </button>
@@ -910,13 +1278,16 @@ export default function Header() {
 
       {/* Search Modal */}
       {isSearchModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div ref={searchModalRef} className="bg-white p-6 rounded-xl shadow-xl w-11/12 max-w-lg mx-4">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 animate-fadeIn">
+          <div 
+            ref={searchModalRef} 
+            className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl w-11/12 max-w-lg mx-4 animate-slide-in-up"
+          >
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-gray-900">Search Products</h2>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Search Products</h2>
               <button
                 onClick={() => setIsSearchModalOpen(false)}
-                className="text-gray-400 hover:text-gray-500"
+                className="text-gray-400 hover:text-gray-500 dark:text-gray-300 dark:hover:text-gray-200 p-2 -m-2 mobile-menu-btn"
               >
                 <IoMdClose className="h-6 w-6" />
               </button>
@@ -925,45 +1296,162 @@ export default function Header() {
               <input
                 type="text"
                 placeholder="Search for products..."
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                autoFocus
               />
-              <button 
-                type="submit"
-                className="absolute right-3 top-3 text-gray-500 hover:text-orange-500"
-              >
-                {isSearching ? (
-                  <div className="h-6 w-6 border-2 border-t-orange-500 border-gray-200 rounded-full animate-spin" />
-                ) : (
-                  <BiSearch className="h-6 w-6" />
-                )}
-              </button>
+              <div className="absolute right-3 top-3 flex items-center space-x-2">
+                {/* Voice Search Button */}
+                <button 
+                  type="button"
+                  onClick={handleVoiceSearch}
+                  className={`text-gray-500 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400 ${isVoiceSearchActive ? 'text-red-500 animate-pulse' : ''}`}
+                >
+                  <FaMicrophone className="h-5 w-5" />
+                </button>
+                
+                {/* Search Button */}
+                <button 
+                  type="submit"
+                  className="text-gray-500 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400"
+                >
+                  {isSearching ? (
+                    <div className="h-6 w-6 border-2 border-t-orange-500 border-gray-200 rounded-full animate-spin" />
+                  ) : (
+                    <BiSearch className="h-6 w-6" />
+                  )}
+                </button>
+              </div>
             </form>
+            
+            {/* Recent & Popular Searches */}
+            <div className="mt-5 space-y-4">
+              {recentSearches.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Recent Searches</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {recentSearches.map((term, index) => (
+                      <button
+                        key={`recent-${index}`}
+                        className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-sm hover:bg-orange-100 dark:hover:bg-orange-900 transition-colors"
+                        onClick={() => {
+                          setSearchQuery(term);
+                          handleSearch({ preventDefault: () => {} });
+                        }}
+                      >
+                        {term}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              <div>
+                <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Popular Searches</h3>
+                <div className="flex flex-wrap gap-2">
+                  {popularSearches.map((term, index) => (
+                    <button
+                      key={`popular-${index}`}
+                      className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-sm hover:bg-orange-100 dark:hover:bg-orange-900 transition-colors"
+                      onClick={() => {
+                        setSearchQuery(term);
+                        handleSearch({ preventDefault: () => {} });
+                      }}
+                    >
+                      {term}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+            
             {searchResults.length > 0 && (
-              <div className="mt-4 max-h-60 overflow-y-auto border-t border-gray-100 pt-2">
+              <div className="mt-4 max-h-60 overflow-y-auto border-t border-gray-100 dark:border-gray-700 pt-2 mobile-menu-scrollbar">
                 {searchResults.map((item, index) => (
                   <div 
                     key={index} 
-                    className="p-2 hover:bg-gray-50 rounded-md cursor-pointer"
+                    className="p-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md cursor-pointer mobile-menu-btn"
                     onClick={() => {
                       setIsSearchModalOpen(false);
                       navigate(`/product/${item.id}`);
                     }}
                   >
                     <div className="flex items-center">
-                      <div className="w-12 h-12 bg-gray-100 rounded-md mr-3 flex-shrink-0">
+                      <div className="w-12 h-12 bg-gray-100 dark:bg-gray-600 rounded-md mr-3 flex-shrink-0">
                         {item.image && <img src={item.image} alt={item.name} className="object-cover w-full h-full rounded-md" />}
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-800">{item.name}</p>
-                        <p className="text-sm text-gray-500">${item.price}</p>
+                        <p className="text-sm font-medium text-gray-800 dark:text-gray-200">{item.name}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">${item.price}</p>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* QR Scanner Modal */}
+      {isQrScannerOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50 animate-fadeIn">
+          <div 
+            ref={qrScannerRef} 
+            className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl w-11/12 max-w-md mx-4 animate-slide-in-up"
+          >
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Scan QR Code</h2>
+              <button
+                onClick={() => setIsQrScannerOpen(false)}
+                className="text-gray-400 hover:text-gray-500 dark:text-gray-300 p-2 -m-2 mobile-menu-btn"
+              >
+                <IoMdClose className="h-6 w-6" />
+              </button>
+            </div>
+            
+            <div className="flex flex-col items-center">
+              <div className="mb-5 border-2 border-dashed border-gray-300 dark:border-gray-600 p-3 rounded-lg">
+                {/* Placeholder for camera view - in a real app this would use the device camera */}
+                <div className="w-full h-64 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
+                  <div className="text-center p-4">
+                    <FaQrcode className="text-4xl mx-auto mb-3 text-gray-500 dark:text-gray-400" />
+                    <p className="text-gray-500 dark:text-gray-400 mb-2">Point your camera at a QR code</p>
+                    <button 
+                      className="mt-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
+                      onClick={() => {
+                        // For demo, simulate a scan result after a delay
+                        setTimeout(() => {
+                          handleQrResult("https://example.com/product/12345");
+                        }, 1500);
+                      }}
+                    >
+                      Simulate Scan
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="text-center w-full">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Share your cart with friends</p>
+                <div className="bg-white p-3 rounded-lg inline-block">
+                  <Canvas
+                    text={"https://dcart.store/shared-cart/" + (localStorage.getItem("userEmail") || "guest")}
+                    options={{
+                      level: 'M',
+                      margin: 3,
+                      scale: 4,
+                      width: 200,
+                      color: {
+                        dark: '#000',
+                        light: '#FFF',
+                      },
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
