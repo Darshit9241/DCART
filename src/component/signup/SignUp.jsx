@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,10 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const navigate = useNavigate();
 
@@ -25,7 +29,7 @@ export default function SignUp() {
           password,
         }
       );
-      console.log("reponse",response)
+      console.log("reponse", response)
       if (response.data.status) {
         toast.success("sigup succesfull");
         navigate("/login");

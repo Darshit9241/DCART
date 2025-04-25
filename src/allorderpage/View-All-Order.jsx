@@ -50,6 +50,9 @@ const ViewAllOrder = () => {
       setLoading(false);
     }
   }, []);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleCancelOrder = (id) => {
     try {

@@ -1,42 +1,46 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
-  const [email, setEmail]= useState('')
-  const [password, setPassword]= useState('')
-  const [loading ,setLoading]=useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
-  const handlesubmit=async(event)=>{
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const handlesubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
 
-     try{
-        const response = await axios.post("https://react-task-cyan-nine.vercel.app/login",{
-          email,
-          password,
-        });
-        if(response.data.status === true){
-          console.log('response.data.status: ', response.data.status);
-          toast.success("Login Successfully")
-          localStorage.setItem("token", response.data.token)
-          localStorage.setItem("userEmail", email)
-          navigate("/")
-        }else{
-          toast.error(response.data.message)
-        }
-     }catch(err){
+    try {
+      const response = await axios.post("https://react-task-cyan-nine.vercel.app/login", {
+        email,
+        password,
+      });
+      if (response.data.status === true) {
+        console.log('response.data.status: ', response.data.status);
+        toast.success("Login Successfully")
+        localStorage.setItem("token", response.data.token)
+        localStorage.setItem("userEmail", email)
+        navigate("/")
+      } else {
+        toast.error(response.data.message)
+      }
+    } catch (err) {
       if (err.response && err.response.data) {
         toast.error(err.response.data.message || 'Login failed');
       } else {
         toast.error('Login failed');
       }
-     } finally{
+    } finally {
       setLoading(false)
-     }
     }
+  }
 
   return (
     <section className="bg-gray-50">
@@ -52,11 +56,11 @@ export default function Login() {
                 <input
                   type="email"
                   name="email"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                   placeholder="name@company.com"
                   required
                   value={email}
-                  onChange={(e)=>setEmail(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div>
@@ -65,20 +69,20 @@ export default function Login() {
                   type="password"
                   name="password"
                   id="password"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                   placeholder="••••••••"
                   required
                   value={password}
-                  onChange={(e)=>setPassword(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
               <button
                 type="submit"
                 className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                 disabled={loading}
-               >
+              >
                 {loading ? 'Logging in...' : 'Log in'}
-                </button>
+              </button>
               <p className="text-sm font-light text-gray-500">
                 Don't have an account yet? <a href="/sign-up" className="font-medium text-blue-600 hover:underline">Sign up</a>
               </p>
