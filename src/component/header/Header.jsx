@@ -10,6 +10,23 @@ import { Link } from "react-router-dom";
 import { FiPackage } from "react-icons/fi";
 import { FaSignInAlt, FaUserPlus, FaSignOutAlt, FaTicketAlt } from "react-icons/fa";
 
+// Add animation styles
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes slideInLeft {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  .animate-slide-in-left {
+    animation: slideInLeft 0.3s ease-out forwards;
+  }
+`;
+document.head.appendChild(style);
+
 export default function Header() {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
@@ -115,14 +132,7 @@ export default function Header() {
       <div className="fixed top-0 left-0 right-0 bg-white py-3 z-50 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
-            {/* Logo */}
-            <Link to="/" className="flex items-center">
-              <span className="text-2xl md:text-3xl font-bold text-[#FF7004] font-dcart tracking-wider hover:text-orange-600 transition-colors duration-300">
-                DCART
-              </span>
-            </Link>
-
-            {/* Mobile menu button */}
+            {/* Mobile menu button - Now on the left */}
             <div className="md:hidden">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -135,6 +145,13 @@ export default function Header() {
                 )}
               </button>
             </div>
+
+            {/* Logo - Moved to the right on mobile */}
+            <Link to="/" className="flex items-center order-last md:order-first">
+              <span className="text-2xl md:text-3xl font-bold text-[#FF7004] font-dcart tracking-wider hover:text-orange-600 transition-colors duration-300">
+                DCART
+              </span>
+            </Link>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
@@ -255,122 +272,137 @@ export default function Header() {
 
         {/* Mobile Navigation Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 bg-gray-50">
-              <div className="grid grid-cols-2 gap-4 p-4">
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden">
+            <div className="fixed left-0 top-0 h-full w-64 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out animate-slide-in-left">
+              {/* Mobile Menu Header */}
+              <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+                <span className="text-xl font-bold text-[#FF7004]">Menu</span>
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <IoMdClose className="h-6 w-6" />
+                </button>
+              </div>
+
+              {/* Mobile Menu Items */}
+              <div className="py-4 px-4 space-y-3 overflow-y-auto max-h-[calc(100vh-80px)]">
+                {userEmail && (
+                  <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+                    <p className="text-sm font-medium text-gray-900">Welcome back!</p>
+                    <p className="text-sm text-gray-600 truncate">{username}</p>
+                  </div>
+                )}
+
                 <button
                   onClick={handleCartClick}
-                  className="relative flex flex-col items-center justify-center p-3 bg-white rounded-lg shadow-sm hover:bg-orange-50 transition-colors duration-200"
+                  className="w-full flex items-center justify-between p-3 text-gray-700 hover:bg-orange-50 hover:text-orange-600 rounded-lg"
                 >
-                  <div className="relative">
-                    <FaShoppingBag className="text-2xl text-gray-700" />
-                    {cartItemCount > 0 && localStorage.getItem("token") && (
-                      <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                        {cartItemCount}
-                      </span>
-                    )}
+                  <div className="flex items-center gap-3">
+                    <FaShoppingBag className="text-xl" />
+                    <span>Cart</span>
                   </div>
-                  <span className="mt-1 text-sm text-gray-600">Cart</span>
+                  {cartItemCount > 0 && localStorage.getItem("token") && (
+                    <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      {cartItemCount}
+                    </span>
+                  )}
                 </button>
-
 
                 <button
                   onClick={handleWishList}
-                  className="relative flex flex-col items-center justify-center p-3 bg-white rounded-lg shadow-sm hover:bg-orange-50 transition-colors duration-200"
+                  className="w-full flex items-center justify-between p-3 text-gray-700 hover:bg-orange-50 hover:text-orange-600 rounded-lg"
                 >
-                  <div className="relative">
-                    <FaHeart className="text-2xl text-gray-700" />
-                    {wishlistCount > 0 && localStorage.getItem("token") && (
-                      <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                        {wishlistCount}
-                      </span>
-                    )}
+                  <div className="flex items-center gap-3">
+                    <FaHeart className="text-xl" />
+                    <span>Wishlist</span>
                   </div>
-                  <span className="mt-1 text-sm text-gray-600">Wishlist</span>
+                  {wishlistCount > 0 && localStorage.getItem("token") && (
+                    <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      {wishlistCount}
+                    </span>
+                  )}
                 </button>
-
 
                 <button
                   onClick={handleCompareList}
-                  className="relative flex flex-col items-center justify-center p-3 bg-white rounded-lg shadow-sm hover:bg-orange-50 transition-colors duration-200"
+                  className="w-full flex items-center justify-between p-3 text-gray-700 hover:bg-orange-50 hover:text-orange-600 rounded-lg"
                 >
-                  <div className="relative">
-                    <IoMdGitCompare className="text-2xl text-gray-700" />
-                    {compareCount > 0 && localStorage.getItem("token") && (
-                      <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                        {compareCount}
-                      </span>
-                    )}
+                  <div className="flex items-center gap-3">
+                    <IoMdGitCompare className="text-xl" />
+                    <span>Compare</span>
                   </div>
-                  <span className="mt-1 text-sm text-gray-600">Compare</span>
+                  {compareCount > 0 && localStorage.getItem("token") && (
+                    <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      {compareCount}
+                    </span>
+                  )}
                 </button>
 
                 <button
                   onClick={() => {
-                    setIsMobileMenuOpen(false);
                     navigate("/view-all-order");
+                    setIsMobileMenuOpen(false);
                   }}
-                  className="flex flex-col items-center justify-center p-3 bg-white rounded-lg shadow-sm hover:bg-orange-50 transition-colors duration-200"
+                  className="w-full flex items-center gap-3 p-3 text-gray-700 hover:bg-orange-50 hover:text-orange-600 rounded-lg"
                 >
-                  <FiPackage className="text-2xl text-gray-700" />
-                  <span className="mt-1 text-sm text-gray-600">Orders</span>
+                  <FiPackage className="text-xl" />
+                  <span>Orders</span>
                 </button>
 
-                {/* <button
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    navigate("/Coupon");
-                  }}
-                  className="flex flex-col items-center justify-center p-3 bg-white rounded-lg shadow-sm hover:bg-orange-50 transition-colors duration-200"
-                >
-                  <FaTicketAlt className="text-2xl text-gray-700" />
-                  <span className="mt-1 text-sm text-gray-600">Coupon</span>
-                </button> */}
-              </div>
+                <div className="border-t border-gray-200 my-4"></div>
 
-              <div className="px-4 py-3 border-t border-gray-200">
-                {userEmail ? (
-                  <div className="flex flex-col space-y-2">
-                    <p className="text-sm font-medium text-gray-900">Welcome, {username}!</p>
-                    <button
-                      onClick={handleLogout}
-                      className="w-full px-4 py-2 text-sm text-white bg-orange-500 rounded-md hover:bg-orange-600 transition-colors duration-200"
-                    >
-                      Log Out
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex flex-col space-y-2">
-                    <button
-                      onClick={handleLogInClick}
-                      className="w-full px-4 py-2 text-sm text-white bg-orange-500 rounded-md hover:bg-orange-600 transition-colors duration-200"
-                    >
-                      Log In
-                    </button>
+                {!userEmail ? (
+                  <>
                     <button
                       onClick={handleSignInClick}
-                      className="w-full px-4 py-2 text-sm text-orange-500 bg-orange-50 rounded-md hover:bg-orange-100 transition-colors duration-200"
+                      className="w-full flex items-center gap-3 p-3 text-gray-700 hover:bg-orange-50 hover:text-orange-600 rounded-lg"
                     >
-                      Sign Up
+                      <FaUserPlus className="text-xl" />
+                      <span>Sign Up</span>
                     </button>
-                  </div>
-                )}
-              </div>
 
-              {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
-                <div className="px-4 py-3 border-t border-gray-200">
+                    <button
+                      onClick={handleLogInClick}
+                      className="w-full flex items-center gap-3 p-3 text-gray-700 hover:bg-orange-50 hover:text-orange-600 rounded-lg"
+                    >
+                      <FaSignInAlt className="text-xl" />
+                      <span>Log In</span>
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-3 p-3 text-gray-700 hover:bg-orange-50 hover:text-orange-600 rounded-lg"
+                  >
+                    <FaSignOutAlt className="text-xl" />
+                    <span>Log Out</span>
+                  </button>
+                )}
+
+                <button
+                  onClick={() => {
+                    navigate("/Coupon");
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 p-3 text-gray-700 hover:bg-orange-50 hover:text-orange-600 rounded-lg"
+                >
+                  <FaTicketAlt className="text-xl" />
+                  <span>Coupon</span>
+                </button>
+
+                {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
                   <button
                     onClick={() => {
+                      navigate("/addproduct");
                       setIsMobileMenuOpen(false);
-                      navigate('/addproduct');
                     }}
-
-                    className="w-full px-4 py-2 text-sm text-white bg-[#2F333A] rounded-md hover:bg-[#444848] transition-colors duration-200"
+                    className="w-full flex items-center gap-3 p-3 bg-[#2F333A] text-white hover:bg-[#444848] rounded-lg"
                   >
-                    Add Product
+                    <span>Add Product</span>
                   </button>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
         )}

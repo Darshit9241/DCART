@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { coupons } from '../../data/coupons';
+import { motion } from 'framer-motion';
 
 const CouponPage = () => {
     const [copiedCode, setCopiedCode] = useState(null);
@@ -13,44 +14,83 @@ const CouponPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-r from-orange-100 via-white to-orange-100 px-4 py-12">
-            <div className="max-w-6xl mx-auto">
-                <h1 className="text-4xl font-bold text-center text-gray-800 mb-12">
-                    🎁 Explore & Copy Coupons Instantly
-                </h1>
+        <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 px-4 py-16">
+            <div className="max-w-7xl mx-auto">
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="text-center mb-16"
+                >
+                    <h1 className="text-5xl font-extrabold text-gray-800 mb-4">
+                        🎁 Exclusive Deals & Offers
+                    </h1>
+                    <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                        Browse through our collection of premium coupons and save big on your next purchase!
+                    </p>
+                </motion.div>
 
-                <ul className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                <motion.ul 
+                    className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.2, duration: 0.5 }}
+                >
                     {Object.entries(coupons).map(([code, details], idx) => (
-                        <li
+                        <motion.li
                             key={idx}
-                            className="bg-white bg-opacity-80 backdrop-blur-md border border-orange-200 shadow-lg rounded-3xl p-6 transition-all hover:scale-[1.02]"
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: idx * 0.1 }}
+                            whileHover={{ scale: 1.03, translateY: -5 }}
+                            className="relative bg-white rounded-3xl p-8 shadow-xl border border-orange-100 overflow-hidden"
                         >
-                            <div className="flex flex-col h-full justify-between">
-                                <div>
-                                    <h3 className="text-2xl font-bold text-orange-600 tracking-wide">
-                                        {code}
-                                    </h3>
-                                    <p className="text-sm text-gray-600 mt-2">{details.description}</p>
+                            <div className="absolute top-0 right-0 w-24 h-24 bg-orange-100 rounded-bl-full opacity-50" />
+                            <div className="relative z-10">
+                                <div className="flex items-center justify-between mb-6">
+                                    <span className="px-3 py-1 text-xs font-semibold text-orange-600 bg-orange-100 rounded-full">
+                                        SAVE NOW
+                                    </span>
+                                    <div className="w-12 h-12 flex items-center justify-center bg-orange-50 rounded-full">
+                                        🏷️
+                                    </div>
                                 </div>
+                                
+                                <h3 className="text-3xl font-bold text-gray-800 mb-3 tracking-tight">
+                                    {code}
+                                </h3>
+                                <p className="text-gray-600 mb-8 min-h-[3rem]">{details.description}</p>
 
-                                <div className="mt-6">
-                                    <button
-                                        className={`w-full py-2 px-4 text-lg font-medium text-white rounded-xl transition duration-200 ${
-                                            copiedCode === code
-                                                ? 'bg-green-500 cursor-not-allowed'
-                                                : 'bg-orange-500 hover:bg-orange-600'
-                                        }`}
-                                        onClick={() => handleCopyCode(code)}
-                                        disabled={copiedCode === code}
-                                        aria-label={`Copy ${code} to clipboard`}
-                                    >
-                                        {copiedCode === code ? '✅ Copied' : '📋 Copy Code'}
-                                    </button>
-                                </div>
+                                <button
+                                    className={`w-full py-3 px-6 text-lg font-semibold rounded-xl transition-all duration-300 transform ${
+                                        copiedCode === code
+                                            ? 'bg-green-500 text-white shadow-green-200 shadow-lg'
+                                            : 'bg-orange-500 text-white hover:bg-orange-600 hover:shadow-lg hover:shadow-orange-200'
+                                    }`}
+                                    onClick={() => handleCopyCode(code)}
+                                    disabled={copiedCode === code}
+                                    aria-label={`Copy ${code} to clipboard`}
+                                >
+                                    {copiedCode === code ? (
+                                        <span className="flex items-center justify-center gap-2">
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                            Copied!
+                                        </span>
+                                    ) : (
+                                        <span className="flex items-center justify-center gap-2">
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                                            </svg>
+                                            Copy Code
+                                        </span>
+                                    )}
+                                </button>
                             </div>
-                        </li>
+                        </motion.li>
                     ))}
-                </ul>
+                </motion.ul>
             </div>
         </div>
     );
