@@ -388,14 +388,19 @@ const HeaderContent = () => {
                 profileImage={profileImage}
                 triggerFileInput={triggerFileInput}
               />
-              {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
-                <button
-                  onClick={() => navigateTo('/addproduct')}
-                  className="w-[150px] flex items-center justify-center gap-2 px-4 py-2 text-white bg-[#2F333A] rounded-lg hover:bg-[#444848] transition-colors duration-200"
-                >
-                  <span>Add Product</span>
-                </button>
-              )}
+              <div className="justify-center items-center hidden sm:block">
+                {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
+                  <button
+                    onClick={() => navigateTo('/addproduct')}
+                    className="w-[150px] flex items-center justify-center gap-2 px-4 py-2 text-white bg-[#2F333A] rounded-lg hover:bg-[#444848] transition-colors duration-200"
+                  >
+                    <span>Add Product</span>
+                  </button>
+                )}
+              </div>
+
+
+
             </div>
           </div>
 
