@@ -1,75 +1,50 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { MdLanguage } from "react-icons/md";
+import { useTheme } from './ThemeContext';
 
-export default function LanguageMenu({ 
-  selectedLanguage, 
-  selectedCurrency, 
-  setSelectedLanguage, 
-  setSelectedCurrency, 
-  closeMenu 
-}) {
-  // Available languages and currencies
-  const languages = [
-    { code: 'en', name: 'English' },
-    { code: 'es', name: 'Español' },
-    { code: 'fr', name: 'Français' },
-    { code: 'de', name: 'Deutsch' },
-    { code: 'zh', name: '中文' }
-  ];
+const LanguageMenu = () => {
+  const { isDarkMode, currentLanguage, changeLanguage, languages } = useTheme();
+  const [isOpen, setIsOpen] = React.useState(false);
+  const menuRef = useRef(null);
 
-  const currencies = [
-    { code: 'USD', symbol: '$', name: 'US Dollar' },
-    { code: 'EUR', symbol: '€', name: 'Euro' },
-    { code: 'GBP', symbol: '£', name: 'British Pound' },
-    { code: 'JPY', symbol: '¥', name: 'Japanese Yen' },
-    { code: 'INR', symbol: '₹', name: 'Indian Rupee' }
-  ];
-
-  const handleLanguageChange = (language) => {
-    setSelectedLanguage(language);
-    closeMenu();
-    // Here you would implement actual language change logic
-    // For example, dispatch an action to update app language
-  };
-
-  const handleCurrencyChange = (currency) => {
-    setSelectedCurrency(currency);
-    closeMenu();
-    // Here you would implement actual currency change logic
-    // For example, dispatch an action to update app currency
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
   };
 
   return (
-    <div className="absolute left-0 mt-3 w-64 bg-white border border-gray-100 rounded-xl shadow-xl z-50 animate-fadeIn">
-      <div className="py-2 px-4 border-b border-gray-100">
-        <h3 className="text-sm font-medium text-gray-500">Select Language</h3>
-        <div className="mt-2 grid grid-cols-2 gap-2">
-          {languages.map(language => (
-            <button
-              key={language.code}
-              className={`text-left px-3 py-1.5 text-sm rounded hover:bg-orange-50 ${selectedLanguage === language.name ? 'bg-orange-100 text-orange-700 font-medium' : 'text-gray-700'}`}
-              onClick={() => handleLanguageChange(language.name)}
-            >
-              {language.name}
-            </button>
-          ))}
+    <div className="relative hidden sm:block" ref={menuRef}>
+      <button
+        data-language-button
+        onClick={toggleMenu}
+        className={`${isDarkMode ? 'text-white hover:text-orange-400' : 'text-gray-700 hover:text-orange-500'} focus:outline-none transition-colors duration-300 flex items-center`}
+      >
+        <MdLanguage className="text-xl" />
+      </button>
+
+      {isOpen && (
+        <div className={`absolute right-0 mt-3 w-48 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'} border rounded-lg shadow-xl z-50 animate-fadeIn`}>
+          <div className="py-1">
+            {languages.map((lang) => (
+              <button
+                key={lang.code}
+                onClick={() => {
+                  changeLanguage(lang.code);
+                  setIsOpen(false);
+                }}
+                className={`w-full flex items-center px-4 py-2 ${currentLanguage === lang.code ? (isDarkMode ? 'bg-gray-700' : 'bg-orange-50 text-orange-600') : ''} ${isDarkMode ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-50'} transition-colors duration-200`}
+              >
+                <span className="mr-2">{lang.flag}</span>
+                <span>{lang.name}</span>
+                {currentLanguage === lang.code && (
+                  <span className="ml-auto">✓</span>
+                )}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
-      
-      <div className="py-2 px-4">
-        <h3 className="text-sm font-medium text-gray-500">Select Currency</h3>
-        <div className="mt-2 space-y-1">
-          {currencies.map(currency => (
-            <button
-              key={currency.code}
-              className={`w-full text-left px-3 py-1.5 text-sm rounded hover:bg-orange-50 ${selectedCurrency === currency.code ? 'bg-orange-100 text-orange-700 font-medium' : 'text-gray-700'}`}
-              onClick={() => handleCurrencyChange(currency.code)}
-            >
-              <span className="inline-block w-8">{currency.symbol}</span>
-              {currency.name}
-            </button>
-          ))}
-        </div>
-      </div>
+      )}
     </div>
   );
-} 
+};
+
+export default LanguageMenu; 
