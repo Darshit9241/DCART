@@ -23,7 +23,7 @@ const AddProduct = () => {
     }, []);
 
     const handleChange = (e) => {
-        const { name, value, files } = e.target;
+        const { name, value, files, type } = e.target;
 
         if (name === 'photo') {
             const file = files?.[0];
@@ -35,17 +35,25 @@ const AddProduct = () => {
                 setPreview(null);
             }
         } else if (name === 'discount') {
-            let formattedValue = value.replace('%', '').trim(); // remove existing %
-
+            let formattedValue = value.replace('%', '').trim();
             if (formattedValue !== '') {
                 formattedValue += '%';
             }
-
             setFormData({ ...formData, discount: formattedValue });
+        } else if (type === 'number') {
+            // Allow only positive numbers for price and old price
+            if (name === 'price' || name === 'oldPrice') {
+                if (parseFloat(value) < 0) {
+                    alert("Price and Old Price cannot be negative.");
+                    return;
+                }
+            }
+            setFormData({ ...formData, [name]: value });
         } else {
             setFormData({ ...formData, [name]: value });
         }
     };
+
 
 
     const fileToBase64 = (file) => {
@@ -116,6 +124,7 @@ const AddProduct = () => {
                         placeholder="Enter price"
                         className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                         required
+                        min="0"
                     />
                 </div>
 
@@ -128,6 +137,7 @@ const AddProduct = () => {
                         onChange={handleChange}
                         placeholder="Enter old price"
                         className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        min="0"
                     />
                 </div>
 

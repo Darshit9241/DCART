@@ -967,7 +967,10 @@ export default function Header() {
                 {/* Admin Product Add Button */}
                 {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
                   <button
-                    onClick={() => navigate(`/addproduct`)}
+                    onClick={() => {
+                      navigate("/addproduct");
+                      setIsMobileMenuOpen(false);
+                    }}
                     className="px-4 py-2 bg-[#2F333A] text-white text-sm font-semibold rounded-lg shadow-md hover:bg-[#444848] transition-all duration-300 transform hover:scale-105"
                   >
                     Add Product
@@ -1100,7 +1103,7 @@ export default function Header() {
 
                     <button
                       onClick={handleWishList}
-                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-xl shadow-smtransition-colors mobile-menu-btn"
+                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm transition-colors mobile-menu-btn"
                     >
                       <div className="relative">
                         <FaHeart className="text-xl text-gray-700 mb-1" />
@@ -1224,7 +1227,7 @@ export default function Header() {
                       navigate("/addproduct");
                       setIsMobileMenuOpen(false);
                     }}
-                    className="w-full flex items-center justify-center gap-2 p-3 bg-[#2F333A] text-white rounded-xltransition-all mobile-menu-btn"
+                    className="w-full flex items-center justify-center gap-2 p-3 bg-[#2F333A] text-white rounded-xl transition-all mobile-menu-btn"
                   >
                     <span className="font-medium">Add Product</span>
                   </button>
