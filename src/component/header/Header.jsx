@@ -365,7 +365,7 @@ const HeaderContent = () => {
               >
                 <FaSearch className="text-xl" />
               </button>
-              
+
               {/* Dark Mode Toggle */}
               <button
                 onClick={toggleDarkMode}
@@ -388,13 +388,21 @@ const HeaderContent = () => {
                 profileImage={profileImage}
                 triggerFileInput={triggerFileInput}
               />
+              {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
+                <button
+                  onClick={() => navigateTo('/addproduct')}
+                  className="w-[150px] flex items-center justify-center gap-2 px-4 py-2 text-white bg-[#2F333A] rounded-lg hover:bg-[#444848] transition-colors duration-200"
+                >
+                  <span>Add Product</span>
+                </button>
+              )}
             </div>
           </div>
 
           {/* Search Bar Component */}
-          <SearchBar 
-            isOpen={isSearchOpen} 
-            toggleSearch={toggleSearch} 
+          <SearchBar
+            isOpen={isSearchOpen}
+            toggleSearch={toggleSearch}
           />
         </div>
       </div>
