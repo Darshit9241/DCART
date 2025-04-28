@@ -87,7 +87,7 @@ export default function Header() {
     if (savedProfileImage) {
       setProfileImage(savedProfileImage);
     }
-  }, []);
+  }, [userEmail]);
 
   // Handle window resize
   useEffect(() => {
@@ -222,8 +222,8 @@ export default function Header() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userEmail");
-    // Don't remove the profile image on logout if you want to keep it
-    // localStorage.removeItem("profileImage");
+    // Don't remove the profile image on logout
+    localStorage.removeItem("profileImage");
     navigate("/login");
     setIsProfileMenuOpen(false);
     setIsSidebarOpen(false);

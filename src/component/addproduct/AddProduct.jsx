@@ -35,16 +35,52 @@ const AddProduct = () => {
                 setPreview(null);
             }
         } else if (name === 'discount') {
-            let formattedValue = value.replace('%', '').trim();
-            if (formattedValue !== '') {
-                formattedValue += '%';
+            // Remove any non-numeric characters except for dash at the beginning
+            let numericValue = value.replace(/[^0-9-]/g, '');
+            if (numericValue.startsWith('-')) {
+                numericValue = '-' + numericValue.substring(1).replace(/-/g, '');
+            } else {
+                numericValue = numericValue.replace(/-/g, '');
             }
+
+            // Ensure it's a valid number
+            if (numericValue === '' || numericValue === '-') {
+                setFormData({ ...formData, discount: '' });
+                return;
+            }
+
+            // Convert to number and check if discount makes sense
+            const discountValue = parseInt(numericValue);
+            
+            // Check if we have both price and oldPrice to validate discount
+            if (formData.price && formData.oldPrice) {
+                const price = parseFloat(formData.price);
+                const oldPrice = parseFloat(formData.oldPrice);
+                
+                // Calculate what percentage discount would make new price = price
+                const maxDiscount = Math.floor((oldPrice - price) / oldPrice * 100);
+                
+                // Ensure old price is higher than new price
+                if (oldPrice <= price) {
+                    toast.error("Old price must be higher than new price for a discount to be valid.");
+                    return;
+                }
+                
+                // Check if the discount is too high or negative
+                if (discountValue > maxDiscount) {
+                    toast.error(`Discount cannot be more than ${maxDiscount}%. This would make the new price lower than specified price.`);
+                    return;
+                }
+            }
+            
+            // Format with percentage sign
+            let formattedValue = numericValue + '%';
             setFormData({ ...formData, discount: formattedValue });
         } else if (type === 'number') {
             // Allow only positive numbers for price and old price
             if (name === 'price' || name === 'oldPrice') {
                 if (parseFloat(value) < 0) {
-                    alert("Price and Old Price cannot be negative.");
+                    toast.error("Price and Old Price cannot be negative.");
                     return;
                 }
             }
@@ -148,9 +184,12 @@ const AddProduct = () => {
                         name="discount"
                         value={formData.discount}
                         onChange={handleChange}
-                        placeholder="Enter discount (e.g. -20%)"
+                        placeholder="Enter discount percentage (e.g. 20)"
                         className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                     />
+                    <p className="text-xs text-gray-500 mt-1">
+                        Enter a numeric value only. The old price must be higher than the new price.
+                    </p>
                 </div>
 
                 <div>
