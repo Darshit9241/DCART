@@ -96,6 +96,59 @@ style.textContent = `
   .animate-slide-in-up {
     animation: slideInUp 0.3s ease-out forwards;
   }
+  
+  /* Voice recording animation */
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 0.8;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  .animate-pulse {
+    animation: pulse 1.5s infinite;
+  }
+  
+  /* Dark mode styles */
+  .dark {
+    color-scheme: dark;
+  }
+  
+  .dark body {
+    background-color: #1a1a1a;
+    color: #f3f4f6;
+  }
+  
+  .dark .bg-white {
+    background-color: #1a1a1a;
+  }
+  
+  .dark .text-gray-700 {
+    color: #d1d5db;
+  }
+  
+  .dark .text-gray-500 {
+    color: #9ca3af;
+  }
+  
+  .dark .border-gray-100 {
+    border-color: #374151;
+  }
+  
+  .dark .border-gray-200 {
+    border-color: #374151;
+  }
+  
+  .dark .shadow-md {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  }
 `;
 document.head.appendChild(style);
 
@@ -116,14 +169,14 @@ export default function Header() {
     { id: 2, text: "New arrivals in electronics category. Check them out!", read: false, time: new Date(Date.now() - 86400000).toISOString() },
     { id: 3, text: "Limited time offer: 20% off on all fashion items.", read: true, time: new Date(Date.now() - 172800000).toISOString() }
   ]);
-  
+
   // New states for modern features
   const [darkMode, setDarkMode] = useState(false);
   const [isVoiceSearchActive, setIsVoiceSearchActive] = useState(false);
   const [isQrScannerOpen, setIsQrScannerOpen] = useState(false);
   const [recentSearches, setRecentSearches] = useState([]);
   const [popularSearches] = useState(['laptops', 'smartphones', 'headphones', 'watches', 'cameras']);
-  
+
   const profileMenuRef = useRef(null);
   const searchModalRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -133,7 +186,7 @@ export default function Header() {
   const qrScannerRef = useRef(null);
   const navigate = useNavigate();
   const { Canvas } = useQRCode();
-  
+
   // For swipe gesture detection
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
@@ -149,16 +202,16 @@ export default function Header() {
 
   const userEmail = localStorage.getItem("userEmail");
   const username = userEmail ? userEmail.split("@")[0] : null;
-  
+
   // Handle swipe gesture
   const handleTouchStart = (e) => {
     touchStartX.current = e.touches[0].clientX;
   };
-  
+
   const handleTouchMove = (e) => {
     touchEndX.current = e.touches[0].clientX;
   };
-  
+
   const handleTouchEnd = () => {
     if (touchStartX.current - touchEndX.current > 100) {
       // Swiped left, close the menu
@@ -185,7 +238,7 @@ export default function Header() {
         setUserPhoto(null);
       }
     };
-    
+
     window.addEventListener('storage', handleStorageChange);
     return () => {
       window.removeEventListener('storage', handleStorageChange);
@@ -218,7 +271,7 @@ export default function Header() {
   };
 
   const markAsRead = (id) => {
-    setNotifications(notifications.map(notification => 
+    setNotifications(notifications.map(notification =>
       notification.id === id ? { ...notification, read: true } : notification
     ));
   };
@@ -236,7 +289,7 @@ export default function Header() {
     const now = new Date();
     const diffMs = now - date;
     const diffHrs = diffMs / (1000 * 60 * 60);
-    
+
     if (diffHrs < 1) {
       return 'Just now';
     } else if (diffHrs < 24) {
@@ -292,7 +345,7 @@ export default function Header() {
     // Close mobile menu when clicking outside
     if (
       isMobileMenuOpen &&
-      mobileMenuRef.current && 
+      mobileMenuRef.current &&
       !mobileMenuRef.current.contains(event.target)
     ) {
       // Don't close if clicking the menu button
@@ -326,13 +379,13 @@ export default function Header() {
     localStorage.removeItem("token");
     localStorage.removeItem("userEmail");
     localStorage.removeItem("userPhoto");
-    
+
     // Clear local state
     setUserPhoto(null);
-    
+
     // Trigger storage event for any other components
     window.dispatchEvent(new Event('storage'));
-    
+
     // Close menus and navigate to login
     setIsProfileMenuOpen(false);
     navigate("/login");
@@ -415,7 +468,7 @@ export default function Header() {
       setIsSearching(true);
       // Save search query to recent searches
       saveToRecentSearches(searchQuery.trim());
-      
+
       // Mock search functionality - in a real app, this would call an API
       setTimeout(() => {
         setIsSearching(false);
@@ -436,13 +489,13 @@ export default function Header() {
     } else {
       document.body.classList.remove('mobile-menu-open');
     }
-    
+
     // Cleanup function
     return () => {
       document.body.classList.remove('mobile-menu-open');
     };
   }, [isMobileMenuOpen]);
-  
+
   // Same for search modal
   useEffect(() => {
     if (isSearchModalOpen) {
@@ -450,7 +503,7 @@ export default function Header() {
     } else {
       document.body.classList.remove('mobile-menu-open');
     }
-    
+
     return () => {
       document.body.classList.remove('mobile-menu-open');
     };
@@ -475,54 +528,54 @@ export default function Header() {
       localStorage.setItem('darkMode', 'false');
     }
   }, [darkMode]);
-  
+
   // Voice search functionality
   const handleVoiceSearch = () => {
     if (!('webkitSpeechRecognition' in window)) {
       alert('Voice search is not supported in your browser');
       return;
     }
-    
+
     setIsVoiceSearchActive(true);
-    
+
     const recognition = new window.webkitSpeechRecognition();
     recognition.continuous = false;
     recognition.interimResults = false;
     recognition.lang = 'en-US';
-    
+
     recognition.onstart = () => {
       // Show feedback that voice recognition is active
     };
-    
+
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
       setSearchQuery(transcript);
       // Auto-search after voice input
       setTimeout(() => {
         setIsVoiceSearchActive(false);
-        handleSearch({ preventDefault: () => {} });
+        handleSearch({ preventDefault: () => { } });
       }, 500);
     };
-    
+
     recognition.onerror = (event) => {
       setIsVoiceSearchActive(false);
       console.error('Speech recognition error', event.error);
     };
-    
+
     recognition.onend = () => {
       setIsVoiceSearchActive(false);
     };
-    
+
     recognition.start();
   };
-  
+
   // QR code scanner handler
   const handleQrScanner = () => {
     setIsQrScannerOpen(true);
     // In a real implementation, we would use the device camera to scan QR codes
     // For demo purposes, we'll just show a modal that simulates scanning
   };
-  
+
   const handleQrResult = (result) => {
     setIsQrScannerOpen(false);
     // If result is a URL, navigate to it
@@ -531,19 +584,19 @@ export default function Header() {
     } else if (result) {
       // If it's a product ID or other data, handle appropriately
       setSearchQuery(result);
-      handleSearch({ preventDefault: () => {} });
+      handleSearch({ preventDefault: () => { } });
     }
   };
-  
+
   // Toggle dark mode
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
-  
+
   // Save search to recent searches
   const saveToRecentSearches = (query) => {
     if (!query) return;
-    
+
     const searches = [...recentSearches];
     // Remove if already exists
     const existingIndex = searches.findIndex(s => s === query);
@@ -557,7 +610,7 @@ export default function Header() {
     // Save to localStorage
     localStorage.setItem('recentSearches', JSON.stringify(searches.slice(0, 5)));
   };
-  
+
   // Load recent searches from localStorage
   useEffect(() => {
     const savedSearches = localStorage.getItem('recentSearches');
@@ -610,7 +663,7 @@ export default function Header() {
                   <span className="text-sm font-medium">{selectedLanguage} / {selectedCurrency}</span>
                   <IoChevronDown className={`text-xs transition-transform duration-200 ${isLanguageMenuOpen ? 'rotate-180' : ''}`} />
                 </button>
-                
+
                 {isLanguageMenuOpen && (
                   <div className="absolute left-0 mt-3 w-64 bg-white border border-gray-100 rounded-xl shadow-xl z-50 animate-fadeIn">
                     <div className="py-2 px-4 border-b border-gray-100">
@@ -627,7 +680,7 @@ export default function Header() {
                         ))}
                       </div>
                     </div>
-                    
+
                     <div className="py-2 px-4">
                       <h3 className="text-sm font-medium text-gray-500">Select Currency</h3>
                       <div className="mt-2 space-y-1">
@@ -690,13 +743,13 @@ export default function Header() {
                       </span>
                     )}
                   </button>
-                  
+
                   {isNotificationsOpen && (
                     <div className="absolute right-0 mt-3 w-80 bg-white border border-gray-100 rounded-xl shadow-xl z-50 animate-fadeIn max-h-96 overflow-hidden flex flex-col">
                       <div className="py-2 px-4 border-b border-gray-100 flex justify-between items-center">
                         <h3 className="font-medium text-gray-900">Notifications</h3>
                         {getUnreadCount() > 0 && (
-                          <button 
+                          <button
                             onClick={markAllAsRead}
                             className="text-xs text-orange-500 hover:text-orange-600 font-medium"
                           >
@@ -704,11 +757,11 @@ export default function Header() {
                           </button>
                         )}
                       </div>
-                      
+
                       <div className="overflow-y-auto flex-grow">
                         {notifications.length > 0 ? (
                           notifications.map(notification => (
-                            <div 
+                            <div
                               key={notification.id}
                               className={`p-3 border-b border-gray-50 hover:bg-gray-50 cursor-pointer transition-colors ${!notification.read ? 'bg-orange-50' : ''}`}
                               onClick={() => markAsRead(notification.id)}
@@ -728,9 +781,9 @@ export default function Header() {
                           <div className="p-4 text-center text-gray-500">No notifications</div>
                         )}
                       </div>
-                      
+
                       <div className="p-2 border-t border-gray-100 text-center">
-                        <button 
+                        <button
                           onClick={() => {
                             navigate("/notifications");
                             setIsNotificationsOpen(false);
@@ -751,13 +804,13 @@ export default function Header() {
                     onClick={toggleProfileMenu}
                   >
                     {(userPhoto || localStorage.getItem("userPhoto")) && userEmail ? (
-                      <div 
+                      <div
                         className="w-8 h-8 rounded-full overflow-hidden relative group cursor-pointer"
                         onClick={handleProfilePhotoClick}
                       >
-                        <img 
-                          src={userPhoto || localStorage.getItem("userPhoto")} 
-                          alt="User" 
+                        <img
+                          src={userPhoto || localStorage.getItem("userPhoto")}
+                          alt="User"
                           className="w-full h-full object-cover"
                           onError={(e) => {
                             console.error("Error loading user photo");
@@ -776,12 +829,12 @@ export default function Header() {
                   </button>
 
                   {/* Hidden file input */}
-                  <input 
-                    type="file" 
-                    ref={fileInputRef} 
-                    onChange={handleFileChange} 
-                    accept="image/*" 
-                    className="hidden" 
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    accept="image/*"
+                    className="hidden"
                   />
 
                   {isProfileMenuOpen && (
@@ -789,7 +842,7 @@ export default function Header() {
                       <div className="py-2">
                         {userEmail && (
                           <div className="px-4 py-3 border-b border-gray-100 flex items-center space-x-3">
-                            <div 
+                            <div
                               className="w-10 h-10 rounded-full overflow-hidden relative group cursor-pointer"
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -798,9 +851,9 @@ export default function Header() {
                             >
                               {(userPhoto || localStorage.getItem("userPhoto")) ? (
                                 <>
-                                  <img 
-                                    src={userPhoto || localStorage.getItem("userPhoto")} 
-                                    alt="User" 
+                                  <img
+                                    src={userPhoto || localStorage.getItem("userPhoto")}
+                                    alt="User"
                                     className="w-full h-full object-cover"
                                     onError={(e) => {
                                       e.target.src = "https://via.placeholder.com/40";
@@ -928,7 +981,7 @@ export default function Header() {
         {/* Mobile Navigation Menu */}
         {isMobileMenuOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden animate-fadeIn" onClick={handleClickOutside}>
-            <div 
+            <div
               ref={mobileMenuRef}
               className="fixed left-0 top-0 h-full w-80 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out animate-slide-in-left flex flex-col"
               onClick={(e) => e.stopPropagation()}
@@ -946,7 +999,7 @@ export default function Header() {
                   </Link>
                   <button
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100 mobile-menu-btn"
+                    className="text-gray-500 p-2 rounded-ful mobile-menu-btn"
                   >
                     <IoMdClose className="h-6 w-6" />
                   </button>
@@ -956,7 +1009,7 @@ export default function Header() {
                 {userEmail && (
                   <div className="px-4 py-4 bg-gradient-to-r from-orange-50 to-white border-b border-gray-100">
                     <div className="flex items-center space-x-4">
-                      <div 
+                      <div
                         className="w-14 h-14 rounded-full overflow-hidden relative group cursor-pointer shadow-sm border-2 border-white mobile-menu-btn"
                         onClick={(e) => {
                           e.stopPropagation();
@@ -965,15 +1018,15 @@ export default function Header() {
                       >
                         {(userPhoto || localStorage.getItem("userPhoto")) ? (
                           <>
-                            <img 
-                              src={userPhoto || localStorage.getItem("userPhoto")} 
-                              alt="User" 
+                            <img
+                              src={userPhoto || localStorage.getItem("userPhoto")}
+                              alt="User"
                               className="w-full h-full object-cover"
                               onError={(e) => {
                                 e.target.src = "https://via.placeholder.com/40";
                               }}
                             />
-                            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 flex items-center justify-center transition-all duration-200 opacity-0 group-hover:opacity-100">
+                            <div className="absolute inset-0 bg-black bg-opacity-0 flex items-center justify-center transition-all duration-200 opacity-0">
                               <FaCamera className="text-white text-lg" />
                             </div>
                           </>
@@ -1000,9 +1053,9 @@ export default function Header() {
                     <div className="flex justify-between items-center mb-3">
                       <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Language & Currency</h3>
                     </div>
-                    
+
                     <div className="flex space-x-2">
-                      <select 
+                      <select
                         value={selectedLanguage}
                         onChange={(e) => handleLanguageChange(e.target.value)}
                         className="flex-1 text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
@@ -1013,8 +1066,8 @@ export default function Header() {
                           </option>
                         ))}
                       </select>
-                      
-                      <select 
+
+                      <select
                         value={selectedCurrency}
                         onChange={(e) => handleCurrencyChange(e.target.value)}
                         className="flex-1 text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
@@ -1044,10 +1097,10 @@ export default function Header() {
                       </div>
                       <span className="text-sm font-medium">Cart</span>
                     </button>
-                    
+
                     <button
                       onClick={handleWishList}
-                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-orange-50 transition-colors mobile-menu-btn"
+                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-xl shadow-smtransition-colors mobile-menu-btn"
                     >
                       <div className="relative">
                         <FaHeart className="text-xl text-gray-700 mb-1" />
@@ -1065,7 +1118,7 @@ export default function Header() {
                         setIsNotificationsOpen(!isNotificationsOpen);
                         setIsMobileMenuOpen(false);
                       }}
-                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-orange-50 transition-colors mobile-menu-btn"
+                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm transition-colors mobile-menu-btn"
                     >
                       <div className="relative">
                         <IoNotificationsOutline className="text-xl text-gray-700 mb-1" />
@@ -1078,11 +1131,11 @@ export default function Header() {
                       <span className="text-sm font-medium">Alerts</span>
                     </button>
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-2 p-2 mb-4">
                     <button
                       onClick={handleCompareList}
-                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-orange-50 transition-colors mobile-menu-btn"
+                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm transition-colors mobile-menu-btn"
                     >
                       <div className="relative">
                         <IoMdGitCompare className="text-xl text-gray-700 mb-1" />
@@ -1094,19 +1147,19 @@ export default function Header() {
                       </div>
                       <span className="text-sm font-medium">Compare</span>
                     </button>
-                    
+
                     <button
                       onClick={() => {
                         navigate("/view-all-order");
                         setIsMobileMenuOpen(false);
                       }}
-                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-orange-50 transition-colors mobile-menu-btn"
+                      className="flex flex-col items-center justify-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm transition-colors mobile-menu-btn"
                     >
                       <FiPackage className="text-xl text-gray-700 mb-1" />
                       <span className="text-sm font-medium">Orders</span>
                     </button>
                   </div>
-                  
+
                   <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     Account
                   </div>
@@ -1115,7 +1168,7 @@ export default function Header() {
                     <>
                       <button
                         onClick={handleSignInClick}
-                        className="w-full flex items-center gap-3 p-4 text-gray-700 hover:bg-orange-50 rounded-xl mobile-menu-btn"
+                        className="w-full flex items-center gap-3 p-4 text-gray-700 rounded-xl mobile-menu-btn"
                       >
                         <FaUserPlus className="text-lg text-gray-500" />
                         <span className="font-medium">Sign Up</span>
@@ -1123,7 +1176,7 @@ export default function Header() {
 
                       <button
                         onClick={handleLogInClick}
-                        className="w-full flex items-center gap-3 p-4 text-gray-700 hover:bg-orange-50 rounded-xl mobile-menu-btn"
+                        className="w-full flex items-center gap-3 p-4 text-gray-700 rounded-xl mobile-menu-btn"
                       >
                         <FaSignInAlt className="text-lg text-gray-500" />
                         <span className="font-medium">Log In</span>
@@ -1131,7 +1184,7 @@ export default function Header() {
 
                       <button
                         onClick={handleForgotPassword}
-                        className="w-full flex items-center gap-3 p-4 text-gray-700 hover:bg-orange-50 rounded-xl mobile-menu-btn"
+                        className="w-full flex items-center gap-3 p-4 text-gray-700 rounded-xl mobile-menu-btn"
                       >
                         <FaKey className="text-lg text-gray-500" />
                         <span className="font-medium">Forgot Password</span>
@@ -1140,7 +1193,7 @@ export default function Header() {
                   ) : (
                     <button
                       onClick={handleLogout}
-                      className="w-full flex items-center gap-3 p-4 text-gray-700 hover:bg-orange-50 rounded-xl mobile-menu-btn"
+                      className="w-full flex items-center gap-3 p-4 text-gray-700 rounded-xl mobile-menu-btn"
                     >
                       <FaSignOutAlt className="text-lg text-gray-500" />
                       <span className="font-medium">Log Out</span>
@@ -1152,17 +1205,17 @@ export default function Header() {
                       navigate("/Coupon");
                       setIsMobileMenuOpen(false);
                     }}
-                    className="w-full flex items-center gap-3 p-4 text-gray-700 hover:bg-orange-50 rounded-xl mobile-menu-btn"
+                    className="w-full flex items-center gap-3 p-4 text-gray-700 rounded-xl mobile-menu-btn"
                   >
                     <FaTicketAlt className="text-lg text-gray-500" />
                     <span className="font-medium">Coupon</span>
                   </button>
-                  
+
                   {/* Add padding to ensure content scrolls properly on all screen sizes */}
                   <div className="h-16"></div>
                 </div>
               </div>
-              
+
               {/* Admin section if admin user - Fixed at the bottom */}
               {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
                 <div className="sticky bottom-0 p-4 border-t border-gray-200 bg-white z-10 mobile-menu-footer shadow-inner">
@@ -1171,7 +1224,7 @@ export default function Header() {
                       navigate("/addproduct");
                       setIsMobileMenuOpen(false);
                     }}
-                    className="w-full flex items-center justify-center gap-2 p-3 bg-[#2F333A] text-white rounded-xl hover:bg-[#444848] transition-all mobile-menu-btn"
+                    className="w-full flex items-center justify-center gap-2 p-3 bg-[#2F333A] text-white rounded-xltransition-all mobile-menu-btn"
                   >
                     <span className="font-medium">Add Product</span>
                   </button>
@@ -1185,8 +1238,8 @@ export default function Header() {
       {/* Search Modal */}
       {isSearchModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 animate-fadeIn">
-          <div 
-            ref={searchModalRef} 
+          <div
+            ref={searchModalRef}
             className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl w-11/12 max-w-lg mx-4 animate-slide-in-up"
           >
             <div className="flex justify-between items-center mb-4">
@@ -1209,16 +1262,16 @@ export default function Header() {
               />
               <div className="absolute right-3 top-3 flex items-center space-x-2">
                 {/* Voice Search Button */}
-                <button 
+                <button
                   type="button"
                   onClick={handleVoiceSearch}
                   className={`text-gray-500 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400 ${isVoiceSearchActive ? 'text-red-500 animate-pulse' : ''}`}
                 >
                   <FaMicrophone className="h-5 w-5" />
                 </button>
-                
+
                 {/* Search Button */}
-                <button 
+                <button
                   type="submit"
                   className="text-gray-500 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400"
                 >
@@ -1230,7 +1283,7 @@ export default function Header() {
                 </button>
               </div>
             </form>
-            
+
             {/* Recent & Popular Searches */}
             <div className="mt-5 space-y-4">
               {recentSearches.length > 0 && (
@@ -1243,7 +1296,7 @@ export default function Header() {
                         className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-sm hover:bg-orange-100 dark:hover:bg-orange-900 transition-colors"
                         onClick={() => {
                           setSearchQuery(term);
-                          handleSearch({ preventDefault: () => {} });
+                          handleSearch({ preventDefault: () => { } });
                         }}
                       >
                         {term}
@@ -1252,7 +1305,7 @@ export default function Header() {
                   </div>
                 </div>
               )}
-              
+
               <div>
                 <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Popular Searches</h3>
                 <div className="flex flex-wrap gap-2">
@@ -1262,7 +1315,7 @@ export default function Header() {
                       className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-sm hover:bg-orange-100 dark:hover:bg-orange-900 transition-colors"
                       onClick={() => {
                         setSearchQuery(term);
-                        handleSearch({ preventDefault: () => {} });
+                        handleSearch({ preventDefault: () => { } });
                       }}
                     >
                       {term}
@@ -1271,12 +1324,12 @@ export default function Header() {
                 </div>
               </div>
             </div>
-            
+
             {searchResults.length > 0 && (
               <div className="mt-4 max-h-60 overflow-y-auto border-t border-gray-100 dark:border-gray-700 pt-2 mobile-menu-scrollbar">
                 {searchResults.map((item, index) => (
-                  <div 
-                    key={index} 
+                  <div
+                    key={index}
                     className="p-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md cursor-pointer mobile-menu-btn"
                     onClick={() => {
                       setIsSearchModalOpen(false);
@@ -1303,8 +1356,8 @@ export default function Header() {
       {/* QR Scanner Modal */}
       {isQrScannerOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50 animate-fadeIn">
-          <div 
-            ref={qrScannerRef} 
+          <div
+            ref={qrScannerRef}
             className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl w-11/12 max-w-md mx-4 animate-slide-in-up"
           >
             <div className="flex justify-between items-center mb-4">
@@ -1316,7 +1369,7 @@ export default function Header() {
                 <IoMdClose className="h-6 w-6" />
               </button>
             </div>
-            
+
             <div className="flex flex-col items-center">
               <div className="mb-5 border-2 border-dashed border-gray-300 dark:border-gray-600 p-3 rounded-lg">
                 {/* Placeholder for camera view - in a real app this would use the device camera */}
@@ -1324,7 +1377,7 @@ export default function Header() {
                   <div className="text-center p-4">
                     <FaQrcode className="text-4xl mx-auto mb-3 text-gray-500 dark:text-gray-400" />
                     <p className="text-gray-500 dark:text-gray-400 mb-2">Point your camera at a QR code</p>
-                    <button 
+                    <button
                       className="mt-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
                       onClick={() => {
                         // For demo, simulate a scan result after a delay
@@ -1338,7 +1391,7 @@ export default function Header() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="text-center w-full">
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Share your cart with friends</p>
                 <div className="bg-white p-3 rounded-lg inline-block">
