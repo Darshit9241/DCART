@@ -101,7 +101,7 @@ export default function Header() {
   const handleCartClick = () => {
     const token = localStorage.getItem("token");
     if (token) {
-      navigate("/orderinfo");
+      navigate("/cart");
     } else {
       navigate("/login");
     }
@@ -301,7 +301,7 @@ export default function Header() {
                 <button
                   onClick={() => {
                     setIsMobileMenuOpen(false);
-                    navigate("/allorderspage");
+                    navigate("/view-all-order");
                   }}
                   className="flex flex-col items-center justify-center p-3 bg-white rounded-lg shadow-sm hover:bg-orange-50 transition-colors duration-200"
                 >
