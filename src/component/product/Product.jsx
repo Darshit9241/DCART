@@ -156,36 +156,54 @@ export default function Product({ onCartClick, onCartOpen }) {
                 <div key={product.id} className="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
 
                   <div className="relative">
-                    <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-2xl">
+                    <div 
+                      className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-2xl cursor-pointer"
+                      onClick={(e) => {
+                        // Only navigate if the click is directly on this div (not on buttons)
+                        if (e.currentTarget === e.target) {
+                          navigate(`/product/${product.id}`);
+                        }
+                      }}
+                    >
                       <img
-                        onClick={() => navigate(`/product/${product.id}`)}
                         src={product.imgSrc}
                         alt={product.alt}
-                        // className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
-                        className="w-full h-[300px] object-cover transform group-hover:scale-105 transition-transform duration-300 cursor-pointer"
+                        className="w-full h-[300px] object-cover transform group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
 
 
                     <div className="absolute top-4 right-4 flex flex-col gap-2">
                       <button
-                        onClick={() => toggleFavorite(product)}
-                        className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${isWished ? 'text-red-500' : 'text-gray-600'
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          toggleFavorite(product);
+                        }}
+                        className={`p-3 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${isWished ? 'text-red-500' : 'text-gray-600'
                           }`}
                       >
                         {isWished ? <FaHeart className="text-xl" /> : <FaRegHeart className="text-xl" />}
                       </button>
 
                       <button
-                        onClick={() => handleViewDetails(product)}
-                        className="p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white text-gray-600 transition-all duration-200"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          handleViewDetails(product);
+                        }}
+                        className="p-3 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white text-gray-600 transition-all duration-200"
                       >
                         <HiOutlineViewGrid className="text-xl" />
                       </button>
 
                       <button
-                        onClick={() => toggleCompare(product)}
-                        className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${compareList.some(item => item.id === product.id) ? 'text-blue-500' : 'text-gray-600'
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          toggleCompare(product);
+                        }}
+                        className={`p-3 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200 ${compareList.some(item => item.id === product.id) ? 'text-blue-500' : 'text-gray-600'
                           }`}
                       >
                         <FaCodeCompare className="text-xl" />
@@ -193,9 +211,12 @@ export default function Product({ onCartClick, onCartOpen }) {
 
                       {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
                         <button
-                          onClick={() => handleRemoveProduct(product.id)}
-                          className={`p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-200
-                            }`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            handleRemoveProduct(product.id);
+                          }}
+                          className={`p-2 backdrop-blur-sm}`}
                         >
                           <IoIosCloseCircle className="text-xl" />
                         </button>
@@ -210,7 +231,11 @@ export default function Product({ onCartClick, onCartOpen }) {
                     )}
 
                     <button
-                      onClick={() => handleAddToCart(product)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        handleAddToCart(product);
+                      }}
                       className="m-3 rounded-2xl absolute bottom-0 left-0 right-0 bg-black text-white py-3 text-center font-medium transform translate-y-0 group-hover:translate-y-0 transition-transform duration-300"
                     >
                       Add to Cart
@@ -231,7 +256,11 @@ export default function Product({ onCartClick, onCartOpen }) {
 
                   {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
                     <button
-                      onClick={() => handleRemoveProduct(product.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        handleRemoveProduct(product.id);
+                      }}
                       className="absolute top-2 left-2 p-1.5 bg-black text-white rounded-full hover:bg-gray-800 transition-colors duration-200"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
