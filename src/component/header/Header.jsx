@@ -23,7 +23,6 @@ const HeaderContent = () => {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const { isDarkMode, toggleDarkMode } = useTheme();
-  const [currentLanguage, setCurrentLanguage] = useState('en');
   const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
   const [isRecentlyViewedOpen, setIsRecentlyViewedOpen] = useState(false);
   const dispatch = useDispatch();
