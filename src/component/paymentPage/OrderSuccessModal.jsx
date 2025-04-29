@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { FaCheckCircle, FaAngleDown, FaAngleUp, FaTimes } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { getCurrencySymbol } from '../../utils/currencyUtils';
+import { useSelector } from 'react-redux';
 
 const OrderSuccessModal = ({ orderDetails, onClose }) => {
   const navigate = useNavigate();
   const [showOrderItems, setShowOrderItems] = useState(false);
+  const currentCurrency = useSelector((state) => state.currency.currentCurrency);
 
   if (!orderDetails) return null;
 
@@ -69,11 +72,11 @@ const OrderSuccessModal = ({ orderDetails, onClose }) => {
                     <div className="flex-1">
                       <h3 className="font-medium text-gray-800">{item.name}</h3>
                       <div className="grid grid-cols-2 gap-1 text-sm text-gray-500 mt-1">
-                        <span>Price: ${parseFloat(item.price).toFixed(2)}</span>
+                        <span>Price: {getCurrencySymbol(currentCurrency)}{parseFloat(item.price).toFixed(2)}</span>
                         <span>Discount: {item.discount}%</span>
                         <span>Quantity: {item.quantity}</span>
                         <span className="font-semibold text-blue-600">
-                          Total: ${calculateItemTotal(item).toFixed(2)}
+                          Total: {getCurrencySymbol(currentCurrency)}{calculateItemTotal(item).toFixed(2)}
                         </span>
                       </div>
                     </div>
@@ -83,15 +86,15 @@ const OrderSuccessModal = ({ orderDetails, onClose }) => {
             )}
           </div>
 
-          <InfoRow label="Shipping Cost:" value={`$${orderDetails.shippingCost.toFixed(2)}`} />
+          <InfoRow label="Shipping Cost:" value={`${getCurrencySymbol(currentCurrency)}${orderDetails.shippingCost.toFixed(2)}`} />
 
           {orderDetails.discount > 0 && (
-            <InfoRow label="After apply Coupon Discount:" value={`-$${orderDetails.discount.toFixed(2)}`} highlight />
+            <InfoRow label="After apply Coupon Discount:" value={`-${getCurrencySymbol(currentCurrency)}${orderDetails.discount.toFixed(2)}`} highlight />
           )}
 
           <div className="flex justify-between items-center border-t pt-3 mt-3 font-semibold text-base md:text-lg">
             <span>Total Amount:</span>
-            <span>${orderDetails.totalPrice.toFixed(2)}</span>
+            <span>{getCurrencySymbol(currentCurrency)}{orderDetails.totalPrice.toFixed(2)}</span>
           </div>
         </div>
 

@@ -8,6 +8,7 @@ import { FaCodeCompare, FaCircleCheck, FaChevronRight } from "react-icons/fa6";
 import { addItem } from "../../redux/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import SimilarProductDynamicPage from "../similarproduct/SimilarProductDynamicPage";
+import { getCurrencySymbol } from "../../utils/currencyUtils";
 
 export default function DynamicProductDetail({ onCartClick, onCartOpen }) {
     const { id } = useParams();
@@ -18,6 +19,7 @@ export default function DynamicProductDetail({ onCartClick, onCartOpen }) {
     const [quantity, setQuantity] = useState(1);
     const [activeTab, setActiveTab] = useState("description");
     const [currentImage, setCurrentImage] = useState(0);
+    const currentCurrency = useSelector((state) => state.currency.currentCurrency);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -301,11 +303,11 @@ export default function DynamicProductDetail({ onCartClick, onCartOpen }) {
 
                                     <div className="flex items-baseline mb-4">
                                         <span className="text-2xl font-bold text-emerald-500 mr-2">
-                                            ${product.price.toLocaleString()}
+                                            {getCurrencySymbol(currentCurrency)}{product.price.toLocaleString()}
                                         </span>
                                         {product.oldPrice && (
                                             <span className="text-lg text-gray-500 line-through">
-                                                ${product.oldPrice.toLocaleString()}
+                                                {getCurrencySymbol(currentCurrency)}{product.oldPrice.toLocaleString()}
                                             </span>
                                         )}
                                         {product.discount && (

@@ -3,12 +3,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { MdOutlineClose, MdDelete, MdAdd, MdRemove } from "react-icons/md";
 import { removeItem, incrementQuantity, decrementQuantity, clearCart } from '../../redux/cartSlice';
 import { useNavigate } from "react-router-dom";
+import { getCurrencySymbol } from '../../utils/currencyUtils';
 
 const CartBox = ({ isOpen, closeSidebar }) => {
   const cartRef = useRef();
   const cartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const currentCurrency = useSelector((state) => state.currency.currentCurrency);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -148,7 +150,7 @@ const CartBox = ({ isOpen, closeSidebar }) => {
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-gray-600">Price:</span>
-                        <span className="font-semibold text-[#FF7004]">${item.price.toFixed(2)}</span>
+                        <span className="font-semibold text-[#FF7004]">{getCurrencySymbol(currentCurrency)}{item.price.toFixed(2)}</span>
                       </div>
 
                       {item.discount && (
@@ -165,7 +167,7 @@ const CartBox = ({ isOpen, closeSidebar }) => {
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-gray-600">Total:</span>
                         <span className="font-semibold text-green-600">
-                          ${getPercentageDiscount(item.price, item.quantity, item.discount)}
+                          {getCurrencySymbol(currentCurrency)}{getPercentageDiscount(item.price, item.quantity, item.discount)}
                         </span>
                       </div>
                     </div>
@@ -199,7 +201,7 @@ const CartBox = ({ isOpen, closeSidebar }) => {
           <div className="mb-4">
             <div className="flex justify-between items-center text-lg font-semibold mb-2">
               <span>Total Amount</span>
-              <span className="text-[#FF7004]">${calculateTotalPrice()}</span>
+              <span className="text-[#FF7004]">{getCurrencySymbol(currentCurrency)}{calculateTotalPrice()}</span>
             </div>
             <p className="text-sm text-gray-500 text-right">Including all taxes and discounts</p>
           </div>

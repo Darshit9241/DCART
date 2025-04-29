@@ -3,6 +3,7 @@ import cartReducer from "../redux/cartSlice";
 import wishlistReducer from '../redux/wishlistSlice';
 import compareReducer from '../redux/compareSlice';
 import productReducer from '../redux/productSlice';
+import currencyReducer from './currencySlice';
 import storage from 'redux-persist/lib/storage';
 
 import { persistStore, persistReducer } from 'redux-persist';
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   wishlist: wishlistReducer,
   compare: compareReducer,
   products: productReducer,
+  currency: currencyReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

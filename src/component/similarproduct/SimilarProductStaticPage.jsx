@@ -5,12 +5,14 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { addToWishlist, removeFromWishlist } from '../../redux/wishlistSlice';
 import products from "../ProductData";
+import { getCurrencySymbol } from '../../utils/currencyUtils';
 
 function SimilarProductStaticPage() {
     const scrollRef = useRef(null);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const wishlist = useSelector((state) => state.wishlist);
+    const currentCurrency = useSelector((state) => state.currency.currentCurrency);
 
     const scroll = (direction) => {
         if (scrollRef.current) {
@@ -98,8 +100,8 @@ function SimilarProductStaticPage() {
                                     <span className="text-xs text-gray-500">(12)</span>
                                 </div>
                                 <div className="flex items-baseline">
-                                    <span className="text-lg font-bold text-[#FF9F4A]">${item.price}</span>
-                                    <span className="text-sm text-gray-500 line-through ml-2">${item.oldPrice}</span>
+                                    <span className="text-lg font-bold text-[#FF9F4A]">{getCurrencySymbol(currentCurrency)}{item.price}</span>
+                                    <span className="text-sm text-gray-500 line-through ml-2">{getCurrencySymbol(currentCurrency)}{item.oldPrice}</span>
                                 </div>
                                 <p className="text-sm text-gray-600 mt-1 line-clamp-2">{item.description}</p>
                             </div>

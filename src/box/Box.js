@@ -2,11 +2,13 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { getCurrencySymbol } from '../utils/currencyUtils';
 
 function Box({ onCartOpen }) {
     const cartItems = useSelector((state) => state.cart.items);
     const cartItemCount = cartItems.length;
     const navigate = useNavigate();
+    const currentCurrency = useSelector((state) => state.currency.currentCurrency);
 
     const calculateTotalPrice = () => {
         return cartItems.reduce((total, item) => {
@@ -55,7 +57,7 @@ function Box({ onCartOpen }) {
             <button
                 className="w-full text-sm font-bold text-black bg-white hover:bg-orange-200 transition-all duration-200 rounded-xl p-1 mt-1"
             >
-                ${calculateTotalPrice()}
+                {getCurrencySymbol(currentCurrency)}{calculateTotalPrice()}
             </button>
         </motion.div>
     );

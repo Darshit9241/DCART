@@ -10,17 +10,34 @@ import { addToWishlist, removeFromWishlist } from '../../redux/wishlistSlice';
 import products from "../ProductData";
 import { toast } from 'react-toastify';
 import { addToCompare, removeFromCompare } from '../../redux/compareSlice';
-import { removeProduct } from '../../redux/productSlice'; // Import this
+import { removeProduct } from '../../redux/productSlice';
 import { IoIosCloseCircle } from "react-icons/io";
+import { getCurrencySymbol } from '../../utils/currencyUtils';
+
+// Currency options
+const currencies = [
+  { code: 'USD', symbol: '$', name: 'US Dollar' },
+  { code: 'EUR', symbol: '€', name: 'Euro' },
+  { code: 'GBP', symbol: '£', name: 'British Pound' },
+  { code: 'JPY', symbol: '¥', name: 'Japanese Yen' },
+  { code: 'INR', symbol: '₹', name: 'Indian Rupee' }
+];
 
 export default function Product({ onCartClick, onCartOpen }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const wishlist = useSelector((state) => state.wishlist);
   const compareList = useSelector((state) => state.compare);
+  const currentCurrency = useSelector((state) => state.currency.currentCurrency);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
+
+  // Helper function to get currency symbol
+  // const getCurrencySymbol = (code) => {
+  //   const currency = currencies.find(c => c.code === code);
+  //   return currency ? currency.symbol : '$';
+  // };
 
   const handleViewDetails = (product) => {
     setSelectedProduct(product);
@@ -48,12 +65,12 @@ export default function Product({ onCartClick, onCartOpen }) {
   };
 
 
-  const [productStates, setProductStates] = useState(products.map(product => ({
-    ...product,
-    isFavorite: false, // Initial favorite state
-  })));
+    // const [productStates, setProductStates] = useState(products.map(product => ({
+    //   ...product,
+    //   isFavorite: false, // Initial favorite state
+    // })));
 
-  // const productStates = useSelector((state) => state.products);;
+  const productStates = useSelector((state) => state.products);;
 
   const handleRemoveProduct = (productId) => {
     dispatch(removeProduct(productId)); // Update Redux state
@@ -204,10 +221,10 @@ export default function Product({ onCartClick, onCartOpen }) {
                     <h3 className="text-lg font-semibold text-gray-900 mb-2">{product.name}</h3>
                     <div className="flex items-center gap-3">
                       {typeof product.oldPrice === "number" && product.oldPrice > 0 && (
-                        <span className="text-gray-400 line-through">${product.oldPrice.toFixed(2)}</span>
+                        <span className="text-gray-400 line-through">{getCurrencySymbol(currentCurrency)}{product.oldPrice.toFixed(2)}</span>
                       )}
                       {typeof product.price === "number" && (
-                        <span className="text-xl font-bold text-gray-900">${product.price.toFixed(2)}</span>
+                        <span className="text-xl font-bold text-gray-900">{getCurrencySymbol(currentCurrency)}{product.price.toFixed(2)}</span>
                       )}
                     </div>
                   </div>
@@ -258,10 +275,10 @@ export default function Product({ onCartClick, onCartOpen }) {
 
                   <div className="flex items-center gap-4 mb-6">
                     <span className="text-gray-400 line-through text-xl">
-                      ${selectedProduct.oldPrice.toFixed(2)}
+                      {getCurrencySymbol(currentCurrency)}{selectedProduct.oldPrice.toFixed(2)}
                     </span>
                     <span className="text-2xl font-bold text-gray-900">
-                      ${selectedProduct.price.toFixed(2)}
+                      {getCurrencySymbol(currentCurrency)}{selectedProduct.price.toFixed(2)}
                     </span>
                     <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium">
                       {selectedProduct.discount ? `${selectedProduct.discount}` : '0%'}

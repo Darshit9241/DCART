@@ -9,14 +9,17 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { MdDelete, MdAdd, MdRemove, MdShoppingCart } from 'react-icons/md';
 import { toast } from 'react-toastify';
+import { getCurrencySymbol } from '../utils/currencyUtils';
 
 const Cart = () => {
     const cartItems = useSelector((state) => state.cart.items);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const currentCurrency = useSelector((state) => state.currency.currentCurrency);
+
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, []); 
+    }, []);
 
     const handleRemoveItem = (index) => {
         dispatch(removeItem({ index }));
@@ -124,11 +127,11 @@ const Cart = () => {
                                     <td className="p-4">
                                         <div className="flex flex-col">
                                             <span className="font-medium text-gray-900">
-                                                ${parseFloat(item.price).toFixed(2)}
+                                                <span className="font-semibold text-[#FF7004]">{getCurrencySymbol(currentCurrency)}{parseFloat(item.price).toFixed(2)}</span>
                                             </span>
                                             {item.discount > 0 && (
                                                 <span className="text-sm text-green-600">
-                                                    ${(parseFloat(item.price) * (1 - item.discount / 100)).toFixed(2)}
+                                                    {getCurrencySymbol(currentCurrency)}{(parseFloat(item.price) * (1 - item.discount / 100)).toFixed(2)}
                                                 </span>
                                             )}
                                         </div>
@@ -145,7 +148,7 @@ const Cart = () => {
 
                                             return (
                                                 <>
-                                                    ${discountedPrice.toFixed(2)} <br />
+                                                   {getCurrencySymbol(currentCurrency)}{discountedPrice.toFixed(2)} <br />
                                                 </>
                                             );
                                         })()}
@@ -169,7 +172,7 @@ const Cart = () => {
                                         </div>
                                     </td>
                                     <td className="p-4 font-semibold text-[#FF7004]">
-                                        ${calculateItemTotal(item).toFixed(2)}
+                                    {getCurrencySymbol(currentCurrency)}{calculateItemTotal(item).toFixed(2)}
                                     </td>
                                     <td className="p-4">
                                         <button
@@ -198,7 +201,7 @@ const Cart = () => {
                         <div className="w-full sm:w-auto text-right">
                             <div className="text-lg font-semibold text-gray-900">
                                 Total:{' '}
-                                <span className="text-[#FF7004]">${totalAmount.toFixed(2)}</span>
+                                <span className="text-[#FF7004]">{getCurrencySymbol(currentCurrency)}{totalAmount.toFixed(2)}</span>
                             </div>
                             <button
                                 onClick={handleNavigateToPaymentPage}

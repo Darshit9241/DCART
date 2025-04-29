@@ -2,11 +2,14 @@ import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaBox, FaMapMarkerAlt, FaUser,   FaShoppingBag, FaCreditCard } from 'react-icons/fa';
 import { MdArrowBack } from 'react-icons/md';
+import { useSelector } from 'react-redux';
+import { getCurrencySymbol } from '../../utils/currencyUtils';
 
 const OrderDetails = () => {
   const location = useLocation();
   const orderDetails = location.state;
   const navigate = useNavigate();
+  const currentCurrency = useSelector((state) => state.currency.currentCurrency);
 
   if (!orderDetails) {
     return (
@@ -77,7 +80,7 @@ const OrderDetails = () => {
                 <div className="space-y-2 text-gray-700">
                   <p><span className="font-medium">Address:</span> {orderDetails.userInfo.shippingAddress}</p>
                   <p><span className="font-medium">Payment Method:</span> <span className="capitalize">{orderDetails.paymentMethod}</span></p>
-                  <p><span className="font-medium">Shipping Cost:</span> ${orderDetails.shippingCost.toFixed(2)}</p>
+                  <p><span className="font-medium">Shipping Cost:</span> {getCurrencySymbol(currentCurrency)}{orderDetails.shippingCost.toFixed(2)}</p>
                 </div>
               </div>
             </div>
@@ -99,14 +102,14 @@ const OrderDetails = () => {
                     <div className="flex-1">
                       <h4 className="font-medium text-gray-800">{item.name}</h4>
                       <div className="mt-1 text-sm text-gray-500 grid grid-cols-2 gap-x-4 gap-y-1">
-                        <p>Price: ${parseFloat(item.price).toFixed(2)}</p>
+                        <p>Price: {getCurrencySymbol(currentCurrency)}{parseFloat(item.price).toFixed(2)}</p>
                         {item.discount ? `${item.discount}` : '-0%'}
                         <p>Quantity: {item.quantity}</p>
                       </div>
                     </div>
                     <div className="text-right">
                       <span className="font-semibold text-[#FF7004]">
-                        ${calculateItemTotal(item).toFixed(2)}
+                        {getCurrencySymbol(currentCurrency)}{calculateItemTotal(item).toFixed(2)}
                       </span>
                     </div>
                   </div>
@@ -123,21 +126,21 @@ const OrderDetails = () => {
               <div className="space-y-2 text-gray-300">
                 <div className="flex justify-between">
                   <span>Subtotal:</span>
-                  <span>${orderDetails.totalPrice - orderDetails.shippingCost + orderDetails.discount}</span>
+                  <span>{getCurrencySymbol(currentCurrency)}{orderDetails.totalPrice - orderDetails.shippingCost + orderDetails.discount}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Shipping:</span>
-                  <span>${orderDetails.shippingCost.toFixed(2)}</span>
+                  <span>{getCurrencySymbol(currentCurrency)}{orderDetails.shippingCost.toFixed(2)}</span>
                 </div>
                 {orderDetails.discount > 0 && (
                   <div className="flex justify-between text-green-400">
                     <span>Discount:</span>
-                    <span>-${orderDetails.discount.toFixed(2)}</span>
+                    <span>-{getCurrencySymbol(currentCurrency)}{orderDetails.discount.toFixed(2)}</span>
                   </div>
                 )}
                 <div className="border-t border-gray-600 pt-2 mt-2 flex justify-between font-semibold text-lg">
                   <span>Total:</span>
-                  <span className="text-[#FF9F4A]">${orderDetails.totalPrice.toFixed(2)}</span>
+                  <span className="text-[#FF9F4A]">{getCurrencySymbol(currentCurrency)}{orderDetails.totalPrice.toFixed(2)}</span>
                 </div>
               </div>
             </div>

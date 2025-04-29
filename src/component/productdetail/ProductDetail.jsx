@@ -10,6 +10,7 @@ import { addToWishlist, removeFromWishlist } from '../../redux/wishlistSlice';
 import { addToCompare, removeFromCompare } from "../../redux/compareSlice";
 import { toast } from "react-toastify";
 import SimilarProductStaticPage from "../similarproduct/SimilarProductStaticPage";
+import { getCurrencySymbol } from "../../utils/currencyUtils";
 
 // Tab component for product details
 const Tabs = ({ tabs, activeTab, setActiveTab }) => {
@@ -60,7 +61,6 @@ const Carousel = ({ images }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
-
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -144,6 +144,7 @@ export default function ProductDetail({ onCartOpen, onCartClick }) {
   const [product, setProduct] = useState(null);
   const [showShareOptions, setShowShareOptions] = useState(false);
   const [relatedProducts, setRelatedProducts] = useState([]);
+  const currentCurrency = useSelector((state) => state.currency.currentCurrency);
 
   const dispatch = useDispatch();
   const wishlist = useSelector((state) => state.wishlist);
@@ -384,9 +385,9 @@ export default function ProductDetail({ onCartOpen, onCartClick }) {
 
             <div className="flex gap-5 font-semibold pt-4 text-[20px]">
               {product.oldPrice && (
-                <h2>Old Price: <span className="line-through text-gray-500">${product.oldPrice}</span></h2>
+                <h2>Old Price: <span className="line-through text-gray-500">{getCurrencySymbol(currentCurrency)}{product.oldPrice}</span></h2>
               )}
-              <h2>Price: <span className="text-green-600 font-bold">${product.price}</span></h2>
+              <h2>Price: <span className="text-green-600 font-bold">{getCurrencySymbol(currentCurrency)}{product.price}</span></h2>
             </div>
 
             <div className="flex flex-wrap gap-2 items-center mt-2">

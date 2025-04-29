@@ -3,6 +3,8 @@ import { FiPackage, FiX, FiCheck, FiAlertCircle, FiInfo, FiShoppingBag } from 'r
 import { MdCancel } from 'react-icons/md';
 import { FaBox, FaMapMarkerAlt, FaUser, FaCreditCard, FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { getCurrencySymbol } from '../utils/currencyUtils';
+import { useSelector } from 'react-redux';
 
 const ViewAllOrder = () => {
   const [orders, setOrders] = useState([]);
@@ -12,6 +14,7 @@ const ViewAllOrder = () => {
   const [viewOrderDetails, setViewOrderDetails] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
+  const currentCurrency = useSelector((state) => state.currency.currentCurrency);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -280,7 +283,7 @@ const ViewAllOrder = () => {
                     <div className="pt-3 border-t border-gray-100">
                       <p className="text-lg font-semibold flex items-center justify-between">
                         Total:
-                        <span className="text-indigo-600">${order.totalPrice.toFixed(2)}</span>
+                        <span className="text-indigo-600">{getCurrencySymbol(currentCurrency)}{order.totalPrice.toFixed(2)}</span>
                       </p>
                     </div>
                   </div>
@@ -413,11 +416,11 @@ const ViewAllOrder = () => {
                     <div className="flex-1">
                       <h5 className="font-medium text-gray-800 mb-2">{item.name}</h5>
                       <div className="grid grid-cols-2 gap-2 text-sm text-gray-600">
-                        <p>Price: ${parseFloat(item.price).toFixed(2)}</p>
+                        <p>Price: {getCurrencySymbol(currentCurrency)}{parseFloat(item.price).toFixed(2)}</p>
                         <p>Discount: {item.discount}%</p>
                         <p>Quantity: {item.quantity}</p>
                         <p className="text-indigo-600 font-medium">
-                          Total: ${calculateItemTotal(item).toFixed(2)}
+                          Total: {getCurrencySymbol(currentCurrency)}{calculateItemTotal(item).toFixed(2)}
                         </p>
                       </div>
                     </div>
@@ -433,21 +436,21 @@ const ViewAllOrder = () => {
               <div className="space-y-3 text-gray-100">
                 <div className="flex justify-between">
                   <span>Subtotal:</span>
-                  <span>${(viewOrderDetails.totalPrice - viewOrderDetails.shippingCost + (viewOrderDetails.discount || 0)).toFixed(2)}</span>
+                  <span>{getCurrencySymbol(currentCurrency)}{(viewOrderDetails.totalPrice - viewOrderDetails.shippingCost + (viewOrderDetails.discount || 0)).toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Shipping:</span>
-                  <span>${viewOrderDetails.shippingCost.toFixed(2)}</span>
+                  <span>{getCurrencySymbol(currentCurrency)}{viewOrderDetails.shippingCost.toFixed(2)}</span>
                 </div>
                 {viewOrderDetails.discount > 0 && (
                   <div className="flex justify-between text-green-300">
                     <span>Discount:</span>
-                    <span>-${viewOrderDetails.discount.toFixed(2)}</span>
+                    <span>-{getCurrencySymbol(currentCurrency)}{viewOrderDetails.discount.toFixed(2)}</span>
                   </div>
                 )}
                 <div className="border-t border-white/20 pt-3 mt-3 flex justify-between font-semibold text-lg">
                   <span>Total:</span>
-                  <span className="text-white">${viewOrderDetails.totalPrice.toFixed(2)}</span>
+                  <span className="text-white">{getCurrencySymbol(currentCurrency)}{viewOrderDetails.totalPrice.toFixed(2)}</span>
                 </div>
               </div>
             </div>

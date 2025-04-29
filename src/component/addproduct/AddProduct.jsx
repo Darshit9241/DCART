@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { addProduct } from '../../redux/productSlice';
 import { useNavigate } from 'react-router-dom';
@@ -19,27 +19,28 @@ const AddProduct = () => {
 
     const [preview, setPreview] = useState(null);
     const navigate = useNavigate();
-    
+
     // State for dropdowns
     const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
     const [currencyDropdownOpen, setCurrencyDropdownOpen] = useState(false);
     const categoryDropdownRef = useRef(null);
     const currencyDropdownRef = useRef(null);
-    
+    const currentCurrency = useSelector((state) => state.currency.currentCurrency);
+
     // Loading state
     const [isSubmitting, setIsSubmitting] = useState(false);
-    
+
     const categories = [
-        "Electronics", 
-        "Clothing", 
-        "Home & Kitchen", 
-        "Beauty & Personal Care", 
-        "Toys & Games", 
-        "Books", 
-        "Sports & Outdoors", 
-        "Automotive", 
-        "Health & Wellness", 
-        "Grocery", 
+        "Electronics",
+        "Clothing",
+        "Home & Kitchen",
+        "Beauty & Personal Care",
+        "Toys & Games",
+        "Books",
+        "Sports & Outdoors",
+        "Automotive",
+        "Health & Wellness",
+        "Grocery",
         "Other"
     ];
 
@@ -59,7 +60,7 @@ const AddProduct = () => {
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        
+
         // Close dropdown when clicking outside
         const handleClickOutside = (event) => {
             if (categoryDropdownRef.current && !categoryDropdownRef.current.contains(event.target)) {
@@ -69,7 +70,7 @@ const AddProduct = () => {
                 setCurrencyDropdownOpen(false);
             }
         };
-        
+
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
@@ -111,28 +112,28 @@ const AddProduct = () => {
 
             // Convert to number and check if discount makes sense
             const discountValue = parseInt(numericValue);
-            
+
             // Check if we have both price and oldPrice to validate discount
             if (formData.price && formData.oldPrice) {
                 const price = parseFloat(formData.price);
                 const oldPrice = parseFloat(formData.oldPrice);
-                
+
                 // Calculate what percentage discount would make new price = price
                 const maxDiscount = Math.floor((oldPrice - price) / oldPrice * 100);
-                
+
                 // Ensure old price is higher than new price
                 if (oldPrice <= price) {
                     toast.error("Old price must be higher than new price for a discount to be valid.");
                     return;
                 }
-                
+
                 // Check if the discount is too high or negative
                 if (discountValue > maxDiscount) {
                     toast.error(`Discount cannot be more than ${maxDiscount}%. This would make the new price lower than specified price.`);
                     return;
                 }
             }
-            
+
             // Format with percentage sign
             let formattedValue = numericValue + '%';
             setFormData({ ...formData, discount: formattedValue });
@@ -162,7 +163,7 @@ const AddProduct = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
-        
+
         try {
             const base64Image = await fileToBase64(formData.photo);
             const newProduct = {
@@ -177,7 +178,7 @@ const AddProduct = () => {
                 imgSrc: base64Image,
                 alt: formData.name,
             };
-            
+
             dispatch(addProduct(newProduct));
             toast.success("Product uploaded successfully!");
             setFormData({
@@ -205,11 +206,6 @@ const AddProduct = () => {
         setCategoryDropdownOpen(false);
     };
 
-    const handleCurrencySelect = (currencyCode) => {
-        setFormData({ ...formData, currency: currencyCode });
-        setCurrencyDropdownOpen(false);
-    };
-
     return (
         <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-white py-12 px-4 sm:px-6">
             <div className="max-w-3xl mx-auto">
@@ -217,14 +213,14 @@ const AddProduct = () => {
                     <h2 className="text-3xl font-bold text-gray-900">Add New Product</h2>
                     <p className="mt-2 text-gray-600">Complete the form below to add a new product to your inventory</p>
                 </div>
-                
+
                 <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-lg">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Left column - Basic Info & Image */}
                         <div className="space-y-6">
                             <div>
                                 <h3 className="text-lg font-medium text-gray-700 border-b pb-2">Basic Information</h3>
-                                
+
                                 <div className="mt-4">
                                     <label className="block mb-1 text-gray-700 font-medium">Name <span className="text-red-500">*</span></label>
                                     <input
@@ -241,29 +237,29 @@ const AddProduct = () => {
 
                             <div className="relative" ref={categoryDropdownRef}>
                                 <label className="block mb-1 text-gray-700 font-medium">Category <span className="text-red-500">*</span></label>
-                                <div 
+                                <div
                                     className="w-full border border-gray-300 rounded-lg px-4 py-3 flex justify-between items-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-400 hover:bg-gray-50 transition"
                                     onClick={() => setCategoryDropdownOpen(!categoryDropdownOpen)}
                                 >
                                     <span className={formData.category ? "text-gray-800" : "text-gray-400"}>
                                         {formData.category || "Select a category"}
                                     </span>
-                                    <svg 
-                                        className={`w-5 h-5 transition-transform duration-300 ${categoryDropdownOpen ? 'rotate-180' : ''}`} 
-                                        fill="none" 
-                                        stroke="currentColor" 
-                                        viewBox="0 0 24 24" 
+                                    <svg
+                                        className={`w-5 h-5 transition-transform duration-300 ${categoryDropdownOpen ? 'rotate-180' : ''}`}
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg"
                                     >
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
                                     </svg>
                                 </div>
-                                
+
                                 {categoryDropdownOpen && (
                                     <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                                         {categories.map((category, index) => (
-                                            <div 
-                                                key={index} 
+                                            <div
+                                                key={index}
                                                 className="px-4 py-2 hover:bg-indigo-50 cursor-pointer transition-colors"
                                                 onClick={() => handleCategorySelect(category)}
                                             >
@@ -272,12 +268,12 @@ const AddProduct = () => {
                                         ))}
                                     </div>
                                 )}
-                                
-                                <input 
-                                    type="hidden" 
-                                    name="category" 
-                                    value={formData.category} 
-                                    required 
+
+                                <input
+                                    type="hidden"
+                                    name="category"
+                                    value={formData.category}
+                                    required
                                 />
                             </div>
 
@@ -296,7 +292,7 @@ const AddProduct = () => {
 
                             <div>
                                 <h3 className="text-lg font-medium text-gray-700 border-b pb-2">Product Image</h3>
-                                
+
                                 <div className="mt-4 border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
                                     <input
                                         type="file"
@@ -307,7 +303,7 @@ const AddProduct = () => {
                                         className="hidden"
                                         required
                                     />
-                                    
+
                                     {!preview ? (
                                         <label htmlFor="product-photo" className="cursor-pointer block">
                                             <div className="mx-auto w-14 h-14 mb-3 rounded-full bg-indigo-50 flex items-center justify-center">
@@ -350,52 +346,11 @@ const AddProduct = () => {
                         <div className="space-y-6">
                             <div>
                                 <h3 className="text-lg font-medium text-gray-700 border-b pb-2">Pricing Details</h3>
-                                
-                                {/* Currency Selector */}
-                                <div className="mt-4 mb-4">
-                                    <label className="block mb-1 text-gray-700 font-medium">Currency <span className="text-red-500">*</span></label>
-                                    <div className="relative" ref={currencyDropdownRef}>
-                                        <div 
-                                            className="w-full border border-gray-300 rounded-lg px-4 py-3 flex justify-between items-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-400 hover:bg-gray-50 transition"
-                                            onClick={() => setCurrencyDropdownOpen(!currencyDropdownOpen)}
-                                        >
-                                            <span className="text-gray-800 flex items-center">
-                                                <span className="mr-2 font-medium">{getCurrencySymbol(formData.currency)}</span>
-                                                {currencies.find(c => c.code === formData.currency)?.name || "US Dollar"}
-                                            </span>
-                                            <svg 
-                                                className={`w-5 h-5 transition-transform duration-300 ${currencyDropdownOpen ? 'rotate-180' : ''}`} 
-                                                fill="none" 
-                                                stroke="currentColor" 
-                                                viewBox="0 0 24 24" 
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                                            </svg>
-                                        </div>
-                                        
-                                        {currencyDropdownOpen && (
-                                            <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                                                {currencies.map((currency, index) => (
-                                                    <div 
-                                                        key={index} 
-                                                        className="px-4 py-2 hover:bg-indigo-50 cursor-pointer transition-colors flex items-center"
-                                                        onClick={() => handleCurrencySelect(currency.code)}
-                                                    >
-                                                        <span className="mr-2 font-medium w-6 text-center">{currency.symbol}</span>
-                                                        <span>{currency.name}</span>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                                
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
                                         <label className="block mb-1 text-gray-700 font-medium">Price <span className="text-red-500">*</span></label>
                                         <div className="relative">
-                                            <span className="absolute left-3 top-3 text-gray-500">{getCurrencySymbol(formData.currency)}</span>
+                                            <span className="absolute left-3 top-3 text-gray-500">{getCurrencySymbol(currentCurrency)}</span>
                                             <input
                                                 type="number"
                                                 name="price"
@@ -409,11 +364,11 @@ const AddProduct = () => {
                                             />
                                         </div>
                                     </div>
-                                    
+
                                     <div>
                                         <label className="block mb-1 text-gray-700 font-medium">Old Price</label>
                                         <div className="relative">
-                                            <span className="absolute left-3 top-3 text-gray-500">{getCurrencySymbol(formData.currency)}</span>
+                                            <span className="absolute left-3 top-3 text-gray-500">{getCurrencySymbol(currentCurrency)}</span>
                                             <input
                                                 type="number"
                                                 name="oldPrice"
@@ -447,22 +402,22 @@ const AddProduct = () => {
                                         Enter a numeric value only. Old price must be higher than current price.
                                     </p>
                                 </div>
-                                
+
                                 {formData.price && formData.oldPrice && (
                                     <div className="mt-4 bg-indigo-50 p-3 rounded-lg">
                                         <p className="text-sm text-indigo-700">
                                             <span className="font-medium">Savings: </span>
-                                            {getCurrencySymbol(formData.currency)}{(parseFloat(formData.oldPrice) - parseFloat(formData.price)).toFixed(2)} 
-                                            {' '}({Math.round((1 - parseFloat(formData.price)/parseFloat(formData.oldPrice)) * 100)}% off)
+                                            {getCurrencySymbol(currentCurrency)}{(parseFloat(formData.oldPrice) - parseFloat(formData.price)).toFixed(2)}
+                                            {' '}({Math.round((1 - parseFloat(formData.price) / parseFloat(formData.oldPrice)) * 100)}% off)
                                         </p>
                                     </div>
                                 )}
                             </div>
-                            
+
                             {/* Preview Card */}
                             <div className="mt-6">
                                 <h3 className="text-lg font-medium text-gray-700 border-b pb-2">Product Preview</h3>
-                                
+
                                 <div className="mt-4 bg-white border border-gray-200 rounded-lg overflow-hidden shadow">
                                     <div className="p-4">
                                         <div className="flex items-start space-x-4">
@@ -479,15 +434,15 @@ const AddProduct = () => {
                                                     </svg>
                                                 </div>
                                             )}
-                                            
+
                                             <div>
                                                 <h4 className="font-medium text-gray-800">{formData.name || "Product Name"}</h4>
                                                 <p className="text-gray-500 text-sm">{formData.category || "Category"}</p>
-                                                
+
                                                 <div className="flex items-center space-x-2 mt-2">
-                                                    <span className="font-bold text-gray-900">{getCurrencySymbol(formData.currency)}{parseFloat(formData.price || 0).toFixed(2)}</span>
+                                                    <span className="font-bold text-gray-900">{getCurrencySymbol(currentCurrency)}{parseFloat(formData.price || 0).toFixed(2)}</span>
                                                     {formData.oldPrice && (
-                                                        <span className="text-gray-500 line-through text-sm">{getCurrencySymbol(formData.currency)}{parseFloat(formData.oldPrice).toFixed(2)}</span>
+                                                        <span className="text-gray-500 line-through text-sm">{getCurrencySymbol(currentCurrency)}{parseFloat(formData.oldPrice).toFixed(2)}</span>
                                                     )}
                                                     {formData.discount && (
                                                         <span className="bg-red-100 text-red-800 text-xs px-2 py-0.5 rounded-full font-medium">
@@ -497,12 +452,12 @@ const AddProduct = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <p className="text-gray-600 text-sm mt-3 line-clamp-2">{formData.description || "No description provided"}</p>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             {/* Submit Button */}
                             <div className="pt-4">
                                 <button

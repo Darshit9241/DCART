@@ -11,6 +11,7 @@ import { removeItem } from '../../redux/cartSlice';
 import { toast } from 'react-toastify';
 import { loadGooglePayScript, initializeGooglePay, processGooglePayment } from './GooglePayService';
 import { loadPayPalScript, renderPayPalButtons } from './PayPalService';
+import { getCurrencySymbol } from '../../utils/currencyUtils';
 
 const Payment = () => {
   const [paymentMethod, setPaymentMethod] = useState('credit-card');
@@ -18,6 +19,7 @@ const Payment = () => {
   const [showOrderSuccessModal, setShowOrderSuccessModal] = useState(false);
   const [showCouponModal, setShowCouponModal] = useState(false);
   const [orderDetails, setOrderDetails] = useState(null);
+  const currentCurrency = useSelector((state) => state.currency.currentCurrency);
   const [paymentsClient, setPaymentsClient] = useState(null);
   const [userInfo, setUserInfo] = useState({
     name: '',
@@ -414,7 +416,7 @@ const Payment = () => {
                         <h3 className="font-medium text-gray-800">{item.name}</h3>
                         <div className="flex justify-between text-sm text-gray-500">
                           <span>Qty: {item.quantity}</span>
-                          <span>${calculateItemTotal(item).toFixed(2)}</span>
+                          <span>{getCurrencySymbol(currentCurrency)}{calculateItemTotal(item).toFixed(2)}</span>
                         </div>
                       </div>
                       <button
@@ -431,7 +433,7 @@ const Payment = () => {
 
               <div className="flex justify-between text-sm font-medium border-t border-gray-200 pt-3">
                 <span>{cartItems.length} {cartItems.length === 1 ? 'item' : 'items'}</span>
-                <span className="text-blue-600">${totalPrice.toFixed(2)}</span>
+                <span className="text-blue-600">{getCurrencySymbol(currentCurrency)}{totalPrice.toFixed(2)}</span>
               </div>
             </div>
           </div>
@@ -494,8 +496,8 @@ const Payment = () => {
                   <label
                     key={id}
                     className={`relative flex flex-col items-center p-4 rounded-lg cursor-pointer border-2 transition-all duration-200 ${paymentMethod === id
-                        ? `border-${color}-500 bg-${color}-50 shadow-md`
-                        : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
+                      ? `border-${color}-500 bg-${color}-50 shadow-md`
+                      : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
                       }`}
                   >
                     <input
@@ -625,11 +627,11 @@ const Payment = () => {
               <div className="space-y-3">
                 <div className="flex justify-between text-gray-600">
                   <span>Items ({cartItemCount})</span>
-                  <span>${totalPrice.toFixed(2)}</span>
+                  <span>{getCurrencySymbol(currentCurrency)}{totalPrice.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Shipping</span>
-                  <span>${getShippingCost().toFixed(2)}</span>
+                  <span>{getCurrencySymbol(currentCurrency)}{getShippingCost().toFixed(2)}</span>
                 </div>
                 {appliedCoupon && (
                   <div className="flex justify-between text-green-600">
@@ -638,7 +640,7 @@ const Payment = () => {
                       Discount ({appliedCoupon.code})
                     </span>
                     <span>
-                      -${(
+                      -{getCurrencySymbol(currentCurrency)}{(
                         appliedCoupon.type === 'percentage' || appliedCoupon.type === 'first_purchase'
                           ? totalPrice * appliedCoupon.value / 100
                           : getShippingCost()
@@ -649,7 +651,7 @@ const Payment = () => {
                 <div className="border-t border-gray-200 pt-3 mt-3">
                   <div className="flex justify-between font-semibold text-lg">
                     <span>Total</span>
-                    <span className="text-blue-600">${getFinalPrice().toFixed(2)}</span>
+                    <span className="text-blue-600">{getCurrencySymbol(currentCurrency)}{getFinalPrice().toFixed(2)}</span>
                   </div>
                   <p className="text-xs text-gray-500 mt-1">Taxes included where applicable</p>
                 </div>
@@ -674,7 +676,7 @@ const Payment = () => {
           ) : (
             <span className="flex items-center justify-center gap-2">
               <FaLock className="text-white/80" />
-              {paymentMethod === 'cod' ? 'Place Order' : paymentMethod === 'paypal' ? 'Pay with PayPal' : 'Pay Now'} - ${getFinalPrice().toFixed(2)}
+              {paymentMethod === 'cod' ? 'Place Order' : paymentMethod === 'paypal' ? 'Pay with PayPal' : 'Pay Now'} - {getCurrencySymbol(currentCurrency)}{getFinalPrice().toFixed(2)}
             </span>
           )}
         </button>
