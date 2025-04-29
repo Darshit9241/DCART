@@ -58,7 +58,7 @@ const ComparisonTable = ({ compareList, onRemoveProduct }) => {
             <table className="table-auto border-collapse w-full min-w-[600px] text-center">
                 <thead>
                     <tr className="bg-gray-100 text-sm md:text-base">
-                        <th className="p-3 md:p-4 sticky left-0 bg-gray-100 z-10 rounded-tl-lg">Attributes</th>
+                        <th className="p-3 md:p-4 w-[50px] md:w-[170px] lg:w-[180px] sticky left-0 bg-gray-100 z-10 rounded-tl-lg">Attributes</th>
                         {compareList.map((product) => (
                             <th key={product.id} className="p-3 md:p-4 relative">
                                 <div className="flex flex-col items-center justify-center space-y-2">
