@@ -1,12 +1,19 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeFromCompare, clearCompare } from '../redux/compareSlice';
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdCompare, MdArrowBack } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { motion } from 'framer-motion';
 
 // Separate component for the comparison table
 const ComparisonTable = ({ compareList, onRemoveProduct }) => {
+    const fadeInUp = {
+        initial: { opacity: 0, y: 20 },
+        animate: { opacity: 1, y: 0 },
+        transition: { duration: 0.5 }
+    };
+
     const attributes = [
         { key: 'image', label: 'Image', render: (product) => (
             <img 
@@ -42,8 +49,13 @@ const ComparisonTable = ({ compareList, onRemoveProduct }) => {
     ];
 
     return (
-        <div className="overflow-x-auto w-full rounded-lg shadow-lg">
-            <table className="table-auto border-collapse w-full min-w-[600px] text-center bg-white">
+        <motion.div 
+            className="overflow-x-auto w-full rounded-xl shadow-lg bg-white border border-gray-100"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+        >
+            <table className="table-auto border-collapse w-full min-w-[600px] text-center">
                 <thead>
                     <tr className="bg-gray-100 text-sm md:text-base">
                         <th className="p-3 md:p-4 sticky left-0 bg-gray-100 z-10 rounded-tl-lg">Attributes</th>
@@ -81,7 +93,7 @@ const ComparisonTable = ({ compareList, onRemoveProduct }) => {
                     ))}
                 </tbody>
             </table>
-        </div>
+        </motion.div>
     );
 };
 
@@ -112,29 +124,51 @@ const Compare = () => {
 
     if (compareList.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] p-4">
-                <div className="text-center p-10 text-lg md:text-xl text-gray-600">
-                    <p className="mb-4">No products to compare</p>
-                    <button
+            <motion.div 
+                className="flex flex-col items-center justify-center min-h-[60vh] p-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+            >
+                <div className="text-center p-10 bg-white rounded-2xl shadow-lg max-w-md w-full">
+                    <MdCompare className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+                    <h2 className="text-2xl font-bold text-gray-800 mb-2">No Products to Compare</h2>
+                    <p className="text-gray-500 mb-6">Add some products to start comparing their features.</p>
+                    <motion.button
                         onClick={handleNavigateToHome}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors duration-200"
+                        className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 w-full"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                     >
+                        <MdArrowBack className="text-xl" />
                         Browse Products
-                    </button>
+                    </motion.button>
                 </div>
-            </div>
+            </motion.div>
         );
     }
 
     return (
-        <div className="p-4 md:p-10 max-w-7xl mx-auto">
-            <div className="mb-8">
-                <h1 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-2">
-                    Compare Products
-                </h1>
-                <p className="text-center text-gray-600">
-                    Compare {compareList.length} product{compareList.length !== 1 ? 's' : ''}
-                </p>
+        <motion.div 
+            className="p-4 md:p-10 max-w-7xl mx-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+        >
+            <div className="mb-8 bg-gradient-to-r from-[#FF7004] to-[#FF9F4A] p-6 md:p-10 rounded-2xl text-white text-center">
+                <motion.div
+                    initial={{ y: -20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                >
+                    <MdCompare className="w-12 h-12 mx-auto mb-4 text-blue-200" />
+                    <h1 className="text-2xl md:text-3xl font-bold mb-2">
+                        Compare Products
+                    </h1>
+                    <p className="text-blue-100 text-lg">
+                        Compare {compareList.length} product{compareList.length !== 1 ? 's' : ''}
+                    </p>
+                </motion.div>
             </div>
 
             <ComparisonTable 
@@ -142,21 +176,27 @@ const Compare = () => {
                 onRemoveProduct={handleRemoveProduct}
             />
 
-            <div className="mt-8 flex flex-col md:flex-row justify-center md:justify-between items-center gap-4">
-                <button
+            <div className="mt-8 flex flex-col md:flex-row justify-center md:justify-between items-center gap-4 p-4 bg-white rounded-xl shadow-sm">
+                <motion.button
                     onClick={handleNavigateToHome}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors duration-200 w-full md:w-auto flex items-center justify-center"
+                    className="bg-gradient-to-r from-[#FF7004] to-[#FF9F4A] text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 w-full md:w-auto flex items-center justify-center gap-2"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                 >
+                    <MdArrowBack className="text-xl" />
                     Back To Products
-                </button>
-                <button
+                </motion.button>
+                <motion.button
                     onClick={handleClearAndRedirect}
-                    className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg transition-colors duration-200 w-full md:w-auto flex items-center justify-center"
+                    className="bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 w-full md:w-auto flex items-center justify-center gap-2"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                 >
+                    <MdDelete className="text-xl" />
                     Clear All
-                </button>
+                </motion.button>
             </div>
-        </div>
+        </motion.div>
     );
 };
 

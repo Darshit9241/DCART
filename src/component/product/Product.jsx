@@ -65,10 +65,10 @@ export default function Product({ onCartClick, onCartOpen }) {
   };
 
 
-  const [productStates, setProductStates] = useState(products.map(product => ({
-    ...product,
-    isFavorite: false, // Initial favorite state
-  })));
+    const [productStates, setProductStates] = useState(products.map(product => ({
+      ...product,
+      isFavorite: false, // Initial favorite state
+    })));
 
   // const productStates = useSelector((state) => state.products);;
 
