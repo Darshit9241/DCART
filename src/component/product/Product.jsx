@@ -54,14 +54,14 @@ export default function Product({ onCartClick, onCartOpen }) {
     const isCompared = compareList.some(item => item.id === product.id);
     if (isCompared) {
       dispatch(removeFromCompare(product));
-      toast.info(`Removed from comparison Section`);
+      // toast.info(`Removed from comparison Section`);
     } else {
       if (compareList.length >= 4) {
         toast.warning("You can only compare up to 4 products");
         return;
       }
       dispatch(addToCompare(product));
-      toast.success(`Added to comparison section`);
+      // toast.success(`Added to comparison section`);
     }
   };
 
@@ -75,7 +75,7 @@ export default function Product({ onCartClick, onCartOpen }) {
 
   const handleRemoveProduct = (productId) => {
     dispatch(removeProduct(productId)); // Update Redux state
-    toast.info("Product removed from this section.");
+    // toast.info("Product removed from this section.");
   };
 
   const handleAddToCart = (product) => {
@@ -93,13 +93,13 @@ export default function Product({ onCartClick, onCartOpen }) {
       if (itemIndex !== -1) {
         dispatch(removeItem({ index: itemIndex }));
         setCartItems(cartItems.filter(id => id !== product.id));
-        toast.info("Product removed from cart.");
+        // toast.info("Product removed from cart.");
       }
     } else {
       // Add to cart
       dispatch(addItem({ ...product, quantity: 1 }));
       setCartItems([...cartItems, product.id]);
-      toast.success("Product added to cart.");
+      // toast.success("Product added to cart.");
     }
   };
 
@@ -108,10 +108,10 @@ export default function Product({ onCartClick, onCartOpen }) {
     const isWished = wishlist.some(item => item.id === product.id);
     if (isWished) {
       dispatch(removeFromWishlist(product));
-      toast.info(`Removed from wishlist`);
+      // toast.info(`Removed from wishlist`);
     } else {
       dispatch(addToWishlist(product));
-      toast.success(`Added to wishlist`);
+      // toast.success(`Added to wishlist`);
     }
   };
 
