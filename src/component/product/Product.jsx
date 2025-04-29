@@ -1,11 +1,11 @@
 // src/components/Product.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { FaCodeCompare } from "react-icons/fa6";
 import { HiOutlineViewGrid } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { addItem } from '../../redux/cartSlice';
+import { addItem, removeItem } from '../../redux/cartSlice';
 import { addToWishlist, removeFromWishlist } from '../../redux/wishlistSlice';
 import products from "../ProductData";
 import { toast } from 'react-toastify';
@@ -14,14 +14,6 @@ import { removeProduct } from '../../redux/productSlice';
 import { IoIosCloseCircle } from "react-icons/io";
 import { getCurrencySymbol } from '../../utils/currencyUtils';
 
-// Currency options
-const currencies = [
-  { code: 'USD', symbol: '$', name: 'US Dollar' },
-  { code: 'EUR', symbol: '€', name: 'Euro' },
-  { code: 'GBP', symbol: '£', name: 'British Pound' },
-  { code: 'JPY', symbol: '¥', name: 'Japanese Yen' },
-  { code: 'INR', symbol: '₹', name: 'Indian Rupee' }
-];
 
 export default function Product({ onCartClick, onCartOpen }) {
   const navigate = useNavigate();
@@ -32,6 +24,15 @@ export default function Product({ onCartClick, onCartOpen }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const cart = useSelector((state) => state.cart.items);
+  const [cartItems, setCartItems] = useState([]);
+
+  // Initialize cartItems based on the redux state
+  useEffect(() => {
+    if (cart) {
+      setCartItems(cart.map(item => item.id));
+    }
+  }, [cart]);
 
   // Helper function to get currency symbol
   // const getCurrencySymbol = (code) => {
@@ -84,10 +85,22 @@ export default function Product({ onCartClick, onCartOpen }) {
       return; // Exit the function if the user is not logged in
     }
 
-    dispatch(addItem({ ...product, quantity: 1 }));
-    toast.success("Product added from cart section.");
-    // onCartClick();
-    // onCartOpen();
+    const isInCart = cartItems.includes(product.id);
+    
+    if (isInCart) {
+      // Remove from cart - find the index first
+      const itemIndex = cart.findIndex(item => item.id === product.id);
+      if (itemIndex !== -1) {
+        dispatch(removeItem({ index: itemIndex }));
+        setCartItems(cartItems.filter(id => id !== product.id));
+        toast.info("Product removed from cart.");
+      }
+    } else {
+      // Add to cart
+      dispatch(addItem({ ...product, quantity: 1 }));
+      setCartItems([...cartItems, product.id]);
+      toast.success("Product added to cart.");
+    }
   };
 
   // Function to toggle favorite status
@@ -211,9 +224,9 @@ export default function Product({ onCartClick, onCartOpen }) {
 
                     <button
                       onClick={() => handleAddToCart(product)}
-                      className="m-3 rounded-2xl absolute bottom-0 left-0 right-0 bg-black text-white py-3 text-center font-medium transform translate-y-0 group-hover:translate-y-0 transition-transform duration-300"
+                      className={`m-3 rounded-2xl absolute bottom-0 left-0 right-0 ${cartItems.includes(product.id) ? 'bg-black' : 'bg-black'} text-white py-3 text-center font-medium transform translate-y-0 group-hover:translate-y-0 transition-transform duration-300`}
                     >
-                      Add to Cart
+                      {cartItems.includes(product.id) ? 'Remove from Cart' : 'Add to Cart'}
                     </button>
                   </div>
 
@@ -299,7 +312,7 @@ export default function Product({ onCartClick, onCartOpen }) {
                     }}
                     className="w-full bg-black text-white py-4 rounded-xl font-medium hover:bg-gray-800 transition-colors duration-200"
                   >
-                    Add to Cart
+                    {cartItems.includes(selectedProduct.id) ? 'Remove from Cart' : 'Add to Cart'}
                   </button>
                 </div>
               </div>

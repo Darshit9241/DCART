@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { removeFromWishlist, clearWishlist } from '../redux/wishlistSlice';
 import { useNavigate } from 'react-router-dom';
 import { addItem } from '../redux/cartSlice';
-import { FaHeart, FaTrash, FaShoppingCart, FaArrowLeft, FaFilter, FaSort } from 'react-icons/fa';
+import { FaHeart, FaTrash, FaShoppingCart, FaArrowLeft, FaSort } from 'react-icons/fa';
 import { MdOutlineFilterAlt } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import { motion, AnimatePresence } from 'framer-motion';

@@ -3,7 +3,7 @@ import { CgProfile } from "react-icons/cg";
 import { FaSignInAlt, FaUserPlus, FaSignOutAlt, FaTicketAlt, FaCamera } from "react-icons/fa";
 import { FiPackage } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { useTheme } from './ThemeContext';
+// import { useTheme } from './ThemeContext';
 
 const ProfileMenu = ({ 
   isOpen, 
@@ -14,7 +14,7 @@ const ProfileMenu = ({
   const navigate = useNavigate();
   const userEmail = localStorage.getItem("userEmail");
   const username = userEmail ? userEmail.split("@")[0] : null;
-  const { isDarkMode } = useTheme();
+  // const { isDarkMode } = useTheme();
   const menuRef = useRef(null);
 
   const handleSignInClick = () => {
