@@ -348,7 +348,7 @@ const AddProduct = () => {
                                 <h3 className="text-lg font-medium text-gray-700 border-b pb-2">Pricing Details</h3>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block mb-1 text-gray-700 font-medium">Price <span className="text-red-500">*</span></label>
+                                        <label className="block mb-1 text-gray-700 font-medium">New Price <span className="text-red-500">*</span></label>
                                         <div className="relative">
                                             <span className="absolute left-3 top-3 text-gray-500">{getCurrencySymbol(currentCurrency)}</span>
                                             <input

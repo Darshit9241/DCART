@@ -11,6 +11,7 @@ import QuickActions from "./QuickActions";
 import { useTheme, ThemeProvider } from "./ThemeContext";
 import { currencies } from '../../utils/currencyUtils';
 import { setCurrency } from '../../redux/currencySlice';
+import { MdDarkMode, MdLightMode } from "react-icons/md";
 
 const HeaderContent = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
@@ -242,13 +243,13 @@ const HeaderContent = () => {
               </button>
 
               {/* Dark Mode Toggle */}
-              {/* <button
+              <button
                 onClick={toggleDarkMode}
                 className={`${isDarkMode ? 'text-white hover:text-orange-400' : 'text-gray-700 hover:text-orange-500'} hidden sm:block focus:outline-none transition-colors duration-300`}
                 aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
               >
                 {isDarkMode ? <MdLightMode className="text-xl" /> : <MdDarkMode className="text-xl" />}
-              </button> */}
+              </button>
 
               {/* Currency Menu */}
               {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
