@@ -19,7 +19,7 @@ const ComparisonTable = ({ compareList, onRemoveProduct }) => {
             <img 
                 src={product.imgSrc} 
                 alt={product.alt} 
-                className="h-20 md:h-24 mx-auto object-contain rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300" 
+                className="h-20 md:h-24 mx-auto object-contain rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"     
             />
         )},
         { key: 'name', label: 'Product Name', render: (product) => (
