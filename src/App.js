@@ -58,7 +58,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/product/:id" element={<DynemicProductDetail onCartOpen={handleOpenCart} onCartClick={handleOpenCart} />} />
+        {/* <Route path="/product/:id" element={<DynemicProductDetail onCartOpen={handleOpenCart} onCartClick={handleOpenCart} />} /> */}
         <Route path="/product/:productId" element={<ProductDetail onCartOpen={handleOpenCart} onCartClick={handleOpenCart} />} />
         <Route path="/product" element={<Product onCartOpen={handleOpenCart} onCartClick={handleOpenCart} />} />
         <Route path="/" element={<Home />} />
