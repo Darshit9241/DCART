@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { getCurrencySymbol } from '../utils/currencyUtils';
+import { getCurrencySymbol } from '../../utils/currencyUtils';
 
 function Box({ onCartOpen }) {
     const cartItems = useSelector((state) => state.cart.items);

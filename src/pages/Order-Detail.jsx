@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { FaBox, FaMapMarkerAlt, FaUser,   FaShoppingBag, FaCreditCard } from 'react-icons/fa';
 import { MdArrowBack } from 'react-icons/md';
 import { useSelector } from 'react-redux';
-import { getCurrencySymbol } from '../../utils/currencyUtils';
+import { getCurrencySymbol } from '../utils/currencyUtils';
 
 const OrderDetails = () => {
   const location = useLocation();

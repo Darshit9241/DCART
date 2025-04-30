@@ -1,10 +1,10 @@
 // src/pages/CouponPage.js
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { coupons } from '../../data/coupons';
+import { coupons } from '../data/coupons';
 import { motion } from 'framer-motion';
 
-const CouponPage = () => {
+const Coupon = () => {
     const [copiedCode, setCopiedCode] = useState(null);
 
     const handleCopyCode = (code) => {
@@ -96,4 +96,4 @@ const CouponPage = () => {
     );
 };
 
-export default CouponPage;
+export default Coupon;

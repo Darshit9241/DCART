@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { addProduct } from '../../redux/productSlice';
+import { addProduct } from '../redux/productSlice';
 import { useNavigate } from 'react-router-dom';
 
 const AddProduct = () => {

@@ -3,11 +3,12 @@ import { FaRegHeart, FaRegStar, FaStar, FaStarHalfAlt, FaChevronLeft, FaChevronR
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { addToWishlist, removeFromWishlist } from '../../redux/wishlistSlice';
-import products from "../ProductData";
-import { getCurrencySymbol } from '../../utils/currencyUtils';
+import { addToWishlist, removeFromWishlist } from '../redux/wishlistSlice';
+import { getCurrencySymbol } from '../utils/currencyUtils';
 
-function SimilarProductStaticPage() {
+function SimilarProductDynamicPage() {
+    const productStates = useSelector((state) => state.products);;
+    console.log('productStates: ', productStates);
     const scrollRef = useRef(null);
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -70,7 +71,7 @@ function SimilarProductStaticPage() {
                 ref={scrollRef}
                 className="flex overflow-x-auto space-x-4 scrollbar-hidden scroll-smooth"
             >
-                {products.map((item) => {
+                {productStates.map((item) => {
                     // Check if the product is in the wishlist
                     const isWished = wishlist.some((wishlistItem) => wishlistItem.id === item.id);
 
@@ -121,4 +122,4 @@ function SimilarProductStaticPage() {
     );
 }
 
-export default SimilarProductStaticPage;
+export default SimilarProductDynamicPage;

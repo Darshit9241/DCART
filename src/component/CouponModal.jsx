@@ -1,6 +1,6 @@
 // CouponModal.js
 import React, { useEffect } from 'react';
-import { coupons } from '../../data/coupons';
+import { coupons } from '../data/coupons';
 
 const CouponModal = ({ showModal, onClose, handleAddCoupon }) => {
   useEffect(() => {

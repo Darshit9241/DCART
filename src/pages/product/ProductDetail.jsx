@@ -3,13 +3,13 @@ import { FaHeart, FaRegHeart, FaStar, FaStarHalfAlt, FaRegStar, FaShoppingCart }
 import { FaCodeCompare, FaShare } from "react-icons/fa6";
 import { AiOutlineTwitter, AiFillFacebook, AiFillInstagram } from "react-icons/ai";
 import { useParams } from "react-router-dom";
-import products from "../ProductData";
+import products from "../../component/ProductData";
 import { addItem } from "../../redux/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { addToWishlist, removeFromWishlist } from '../../redux/wishlistSlice';
 import { addToCompare, removeFromCompare } from "../../redux/compareSlice";
 import { toast } from "react-toastify";
-import SimilarProductStaticPage from "../similarproduct/SimilarProductStaticPage";
+import SimilarProductStaticPage from "../../component/SimilarProductStaticPage";
 import { getCurrencySymbol } from "../../utils/currencyUtils";
 
 // Tab component for product details

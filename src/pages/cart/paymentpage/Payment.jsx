@@ -4,14 +4,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { FaCheckCircle, FaLock, FaShoppingBag, FaShieldAlt } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { SiGooglepay, SiPaypal, SiVisa, SiCashapp } from 'react-icons/si';
-import { coupons } from '../../data/coupons'; // Make sure this file exists
-import OrderSuccessModal from './OrderSuccessModal';
-import CouponModal from './CouponModal';
-import { removeItem } from '../../redux/cartSlice';
+import { coupons } from '../../../data/coupons'; // Make sure this file exists
+import OrderSuccessModal from '../../../component/OrderSuccessModal';
+import CouponModal from '../../../component/CouponModal';
 import { toast } from 'react-toastify';
-import { loadGooglePayScript, initializeGooglePay, processGooglePayment } from './GooglePayService';
-import { loadPayPalScript, renderPayPalButtons } from './PayPalService';
-import { getCurrencySymbol } from '../../utils/currencyUtils';
+import { loadGooglePayScript, initializeGooglePay, processGooglePayment } from '../../../component/GooglePayService';
+import { loadPayPalScript, renderPayPalButtons } from '../../../component/PayPalService';
+import { getCurrencySymbol } from '../../../utils/currencyUtils';
+import { removeItem } from '../../../redux/cartSlice';
 
 const Payment = () => {
   const [paymentMethod, setPaymentMethod] = useState('credit-card');

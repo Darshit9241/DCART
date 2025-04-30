@@ -5,11 +5,11 @@ import {
     clearCart,
     decrementQuantity,
     incrementQuantity,
-} from '../redux/cartSlice';
+} from '../../redux/cartSlice';
 import { useNavigate } from 'react-router-dom';
 import { MdDelete, MdAdd, MdRemove, MdShoppingCart } from 'react-icons/md';
 import { toast } from 'react-toastify';
-import { getCurrencySymbol } from '../utils/currencyUtils';
+import { getCurrencySymbol } from '../../utils/currencyUtils';
 
 const Cart = () => {
     const cartItems = useSelector((state) => state.cart.items);

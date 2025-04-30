@@ -7,7 +7,7 @@ import { FaHeart, FaRegHeart, FaTruck, FaShieldAlt, FaUndo, FaStar, FaStarHalfAl
 import { FaCodeCompare, FaCircleCheck, FaChevronRight } from "react-icons/fa6";
 import { addItem } from "../../redux/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
-import SimilarProductDynamicPage from "../similarproduct/SimilarProductDynamicPage";
+import SimilarProductDynamicPage from "../../component/SimilarProductDynamicPage";
 import { getCurrencySymbol } from "../../utils/currencyUtils";
 
 export default function DynamicProductDetail({ onCartClick, onCartOpen }) {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FaCheckCircle, FaAngleDown, FaAngleUp, FaTimes } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { getCurrencySymbol } from '../../utils/currencyUtils';
+import { getCurrencySymbol } from '../utils/currencyUtils';
 import { useSelector } from 'react-redux';
 
 const OrderSuccessModal = ({ orderDetails, onClose }) => {

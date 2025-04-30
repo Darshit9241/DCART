@@ -8,27 +8,27 @@ import Header from "./component/header/Header";
 import Navbar from "./pages/Navbar";
 import Footer from "./pages/Footer";
 
-import SignUp from "./component/signup/SignUp";
-import Login from "./component/login/Login";
-import Product from "./component/product/Product";
+import SignUp from "./pages/SignUp";
+import Login from "./pages/Login";
+import Product from "./pages/product/Product";
 import CartBox from "./component/cartbox/CartBox";
-import Cart from "./cart/Cart";
-import Payment from "./component/paymentPage/Payment";
-import OrderDetail from "./component/orderdetailpage/Order-Detail";
+import Cart from "./pages/cart/Cart";
+import Payment from "./pages/cart/paymentpage/Payment";
+import OrderDetail from "./pages/Order-Detail";
 import NotFoundPage from "./component/404/NotFoundPage";
-import WishList from "./wishlist/WishList";
-import Compare from "./compare/Compare";
-import Box from "./box/Box";
+import WishList from "./pages/WishList";
+import Compare from "./pages/Compare";
+import Box from "./component/box/Box";
 
 import "react-toastify/dist/ReactToastify.css";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
-import ViewAllOrder from "./allorderpage/View-All-Order";
-import AddProduct from "./component/addproduct/AddProduct";
-import DynemicProductDetail from "./component/dynemicproductdetail/DynemicProductDetail";
-import Home from "./component/home/Home";
-import ProductDetail from "./component/productdetail/ProductDetail";
-import CouponPage from "./component/couponpage/CouponPage";
+import ViewAllOrder from "./pages/View-All-Order";
+import AddProduct from "./pages/AddProduct";
+import DynemicProductDetail from "./pages/product/DynemicProductDetail";
+import ProductDetail from "./pages/product/ProductDetail";
+import Home from "./pages/Home";
+import Coupon from "./pages/Coupon";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminLogin from './component/admin/AdminLogin';
 import AdminSignup from './component/admin/AdminSignup';
@@ -53,14 +53,12 @@ export default function App() {
       <Navbar />
 
       <Routes>
-
-
         {/* Public Routes */}
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        {/* <Route path="/product/:id" element={<DynemicProductDetail onCartOpen={handleOpenCart} onCartClick={handleOpenCart} />} /> */}
+        <Route path="/product/:id" element={<DynemicProductDetail onCartOpen={handleOpenCart} onCartClick={handleOpenCart} />} />
         <Route path="/product/:productId" element={<ProductDetail onCartOpen={handleOpenCart} onCartClick={handleOpenCart} />} />
         <Route path="/product" element={<Product onCartOpen={handleOpenCart} onCartClick={handleOpenCart} />} />
         <Route path="/" element={<Home />} />
@@ -74,7 +72,7 @@ export default function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/cart/payment" element={<Payment />} />
           <Route path="/order-detail" element={<OrderDetail />} />
-          <Route path="/Coupon" element={<CouponPage />} />
+          <Route path="/coupon" element={<Coupon />} />
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/admin-signup" element={<AdminSignup />} />
           <Route element={<AdminProtectedRoute />}>
