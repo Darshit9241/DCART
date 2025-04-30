@@ -5,8 +5,8 @@ import { useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 
 import Header from "./component/header/Header";
-import Navbar from "./component/navbar/Navbar";
-import Footer from "./component/footer/Footer";
+import Navbar from "./pages/Navbar";
+import Footer from "./pages/Footer";
 
 import SignUp from "./component/signup/SignUp";
 import Login from "./component/login/Login";
@@ -21,8 +21,8 @@ import Compare from "./compare/Compare";
 import Box from "./box/Box";
 
 import "react-toastify/dist/ReactToastify.css";
-import About from "./about/About";
-import Contact from "./contact/Contact";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
 import ViewAllOrder from "./allorderpage/View-All-Order";
 import AddProduct from "./component/addproduct/AddProduct";
 import DynemicProductDetail from "./component/dynemicproductdetail/DynemicProductDetail";
