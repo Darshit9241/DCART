@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
-import { useNavigate, Link } from 'react-router-dom';
 import { FiMail, FiLock, FiLoader } from 'react-icons/fi';
 
-export default function Login() {
+const AdminLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -13,14 +13,20 @@ export default function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Check if already logged in
+    const token = localStorage.getItem('adminToken');
+    if (token) {
+      navigate('/admin-dashboard');
+    }
+    
     window.scrollTo(0, 0);
-  }, []);
+  }, [navigate]);
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
 
-  const handlesubmit = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
     setError('');
@@ -46,7 +52,7 @@ export default function Login() {
         // Dismiss loading toast
         toast.dismiss(loadingToast);
         
-        toast.success("Login successful! Welcome To DCart.", {
+        toast.success("Login successful! Welcome to Admin Dashboard.", {
           icon: '👋',
           style: {
             borderRadius: '10px',
@@ -56,19 +62,24 @@ export default function Login() {
           duration: 3000,
         });
         
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("userEmail", email);
+        // Store admin credentials
+        localStorage.setItem("adminToken", response.data.token);
+        localStorage.setItem("adminEmail", email);
+        localStorage.setItem("isAdmin", "true");
         
-        // Handle user photo from response
-        if (response.data.user && response.data.user.photo) {
-          localStorage.setItem("userPhoto", response.data.user.photo);
-          console.log("User photo stored from login response");
+        // Handle admin profile data if available
+        if (response.data.user) {
+          localStorage.setItem("adminName", response.data.user.name || "Admin");
+          if (response.data.user.photo) {
+            localStorage.setItem("adminPhoto", response.data.user.photo);
+          }
+          localStorage.setItem("adminRole", response.data.user.role || "Administrator");
         }
         
         // Short delay for better UX
         setTimeout(() => {
-          // Navigate to home page
-          navigate("/");
+          // Navigate to admin dashboard
+          navigate("/admin-dashboard");
         }, 1000);
       } else {
         // Dismiss loading toast
@@ -101,8 +112,8 @@ export default function Login() {
           },
         });
       } else {
-        setError('Login failed. Please try again later.');
-        toast.error('Login failed. Please try again later.', {
+        setError('Login failed. Please check your credentials or try again later.');
+        toast.error('Login failed. Please check your credentials or try again later.', {
           icon: '❌',
           style: {
             borderRadius: '10px',
@@ -114,14 +125,16 @@ export default function Login() {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <section className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
         <div className="text-center">
-          <h1 className="text-3xl font-extrabold text-gray-900 mb-2">Welcome To DCart</h1>
-          <p className="text-sm text-gray-500">Sign in to your DCart account</p>
+          <h1 className="text-3xl font-extrabold text-gray-900 mb-2">
+            <span className="text-orange-500">D</span>Cart Admin
+          </h1>
+          <p className="text-sm text-gray-500">Sign in to your Admin account</p>
         </div>
         
         {error && (
@@ -130,7 +143,7 @@ export default function Login() {
           </div>
         )}
         
-        <form className="space-y-6 mt-8" onSubmit={handlesubmit}>
+        <form className="space-y-6 mt-8" onSubmit={handleSubmit}>
           <div>
             <label 
               htmlFor="email" 
@@ -147,7 +160,7 @@ export default function Login() {
                 name="email"
                 id="email"
                 className="pl-10 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-3 transition-all duration-200"
-                placeholder="name@example.com"
+                placeholder="admin@example.com"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -164,12 +177,12 @@ export default function Login() {
                 Password
               </label>
               <div className="text-right">
-                <Link 
-                  to="/forgot-password" 
+                <a 
+                  href="/admin-forgot-password" 
                   className="text-sm font-medium text-orange-600 hover:text-orange-500"
                 >
                   Forgot password?
-                </Link>
+                </a>
               </div>
             </div>
             <div className="relative">
@@ -219,21 +232,30 @@ export default function Login() {
                   Logging in...
                 </span>
               ) : (
-                "Sign in"
+                "Sign in to Admin"
               )}
             </button>
           </div>
           
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
-              Don't have an account yet?{" "}
+              Don't have an admin account?{" "}
               <Link
-                to="/sign-up"
+                to="/admin-signup"
                 className="font-medium text-orange-600 hover:text-orange-500"
               >
-                Create an account
+                Create admin account
               </Link>
             </p>
+          </div>
+          
+          <div className="text-center border-t border-gray-200 pt-4 mt-4">
+            <Link
+              to="/"
+              className="text-sm font-medium text-gray-600 hover:text-orange-500"
+            >
+              Return to Store
+            </Link>
           </div>
         </form>
       </div>
@@ -242,4 +264,6 @@ export default function Login() {
       <Toaster position="top-center" reverseOrder={false} />
     </section>
   );
-}
+};
+
+export default AdminLogin; 

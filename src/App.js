@@ -29,6 +29,10 @@ import DynemicProductDetail from "./component/dynemicproductdetail/DynemicProduc
 import Home from "./component/home/Home";
 import ProductDetail from "./component/productdetail/ProductDetail";
 import CouponPage from "./component/couponpage/CouponPage";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminLogin from './component/admin/AdminLogin';
+import AdminSignup from './component/admin/AdminSignup';
+import AdminProtectedRoute from './component/AdminProtectedRoute';
 
 function PrivateRoute() {
   const token = localStorage.getItem("token");
@@ -71,6 +75,11 @@ export default function App() {
           <Route path="/cart/payment" element={<Payment />} />
           <Route path="/order-detail" element={<OrderDetail />} />
           <Route path="/Coupon" element={<CouponPage />} />
+          <Route path="/admin-login" element={<AdminLogin />} />
+          <Route path="/admin-signup" element={<AdminSignup />} />
+          <Route element={<AdminProtectedRoute />}>
+            <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          </Route>
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

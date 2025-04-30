@@ -12,6 +12,7 @@ import { useTheme, ThemeProvider } from "./ThemeContext";
 import { currencies } from '../../utils/currencyUtils';
 import { setCurrency } from '../../redux/currencySlice';
 import { MdDarkMode, MdLightMode } from "react-icons/md";
+import { MdAdminPanelSettings } from "react-icons/md";
 
 const HeaderContent = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
@@ -209,7 +210,7 @@ const HeaderContent = () => {
       />
 
       {/* Top Bar */}
-      <div className={`fixed top-0 left-0 right-0 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-800'} py-3 z-30 shadow-md transition-colors duration-300`}>
+      <div className={`fixed top-0 left-0 right-0 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-800'} py-[10px] z-30 shadow-md transition-colors duration-300`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             {/* Mobile Menu Button */}
@@ -313,12 +314,21 @@ const HeaderContent = () => {
               </div>
               <div className="justify-center items-center hidden sm:block">
                 {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
-                  <button
-                    onClick={() => navigateTo('/addproduct')}
-                    className="w-[150px] flex items-center justify-center gap-2 px-4 py-2 text-white bg-[#2F333A] rounded-lg hover:bg-[#444848] transition-colors duration-200"
-                  >
-                    <span>Add Product</span>
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => navigateTo('/admin-login')}
+                      className="w-[150px] flex items-center justify-center gap-2 px-4 py-2 text-white bg-[#FF7004] rounded-lg hover:bg-orange-600 transition-colors duration-200"
+                    >
+                      <MdAdminPanelSettings className="text-xl" />
+                      <span>Admin Panel</span>
+                    </button>
+                    <button
+                      onClick={() => navigateTo('/addproduct')}
+                      className="w-[150px] flex items-center justify-center gap-2 px-4 py-2 text-white bg-[#2F333A] rounded-lg hover:bg-[#444848] transition-colors duration-200"
+                    >
+                      <span>Add Product</span>
+                    </button>
+                  </div>
                 )}
               </div>
             </div>

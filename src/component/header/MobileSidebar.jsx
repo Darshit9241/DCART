@@ -5,7 +5,7 @@ import { IoMdClose, IoMdGitCompare } from "react-icons/io";
 import { FaShoppingBag, FaHeart, FaSignInAlt, FaUserPlus, FaSignOutAlt, FaTicketAlt, FaHome } from "react-icons/fa";
 import { FiPackage, FiUpload } from "react-icons/fi";
 import { CgProfile } from "react-icons/cg";
-import { MdDarkMode, MdLightMode } from "react-icons/md";
+import { MdDarkMode, MdLightMode, MdAdminPanelSettings } from "react-icons/md";
 import { useTheme } from './ThemeContext';
 
 const MobileSidebar = ({ 
@@ -248,6 +248,17 @@ const MobileSidebar = ({
                 <FiPackage className="text-lg" />
                 <span>Orders</span>
               </button>
+
+              {/* Admin Panel Link - Only visible for admin user */}
+              {localStorage.getItem("userEmail") === "test1278@gmail.com" && (
+                <button
+                  onClick={() => navigateTo("/admin-dashboard")}
+                  className={`w-full flex items-center gap-3 px-4 py-3 ${isDarkMode ? 'text-gray-300 hover:bg-gray-800 hover:text-white' : 'text-gray-700 hover:bg-orange-50 hover:text-orange-600'} rounded-lg transition-colors duration-200`}
+                >
+                  <MdAdminPanelSettings className="text-lg" />
+                  <span>Admin Panel</span>
+                </button>
+              )}
 
               <button
                 onClick={() => navigateTo("/Coupon")}
