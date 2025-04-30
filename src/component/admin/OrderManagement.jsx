@@ -61,19 +61,20 @@ const OrderManagement = ({
   );
   
   return (
-    <div className="max-w-7xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Order Dashboard</h1>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      {/* Header Section - Improved responsive layout */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold">Order Dashboard</h1>
         
-        <div className="flex gap-3">
-          <div className="relative">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative w-full sm:w-auto">
             <FaSearch className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
             <input
               type="text"
               placeholder="Search orders..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className={`w-60 pl-10 py-2 border ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-200'} rounded-lg`}
+              className={`w-full sm:w-56 md:w-60 pl-10 py-2 border ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-200'} rounded-lg`}
             />
           </div>
           <select
@@ -91,7 +92,7 @@ const OrderManagement = ({
       
       {/* Dashboard Stats */}
       {!loading && !error && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <StatCard 
             icon={<FiShoppingBag className="h-6 w-6 text-white" />} 
             title="Total Orders" 
@@ -138,7 +139,8 @@ const OrderManagement = ({
           </p>
         </div>
       ) : (
-        <div className={`rounded-lg overflow-hidden ${isDarkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm`}>
+        /* Desktop/Tablet View - Hide on extra small screens */
+        <div className="hidden sm:block rounded-lg overflow-hidden ${isDarkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm">
           <div className={`px-4 py-3 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-50'} border-b border-gray-200 dark:border-gray-700`}>
             <h2 className="font-semibold">Recent Orders</h2>
           </div>
@@ -146,8 +148,8 @@ const OrderManagement = ({
           <div className="divide-y divide-gray-200 dark:divide-gray-700">
             {orders.map((order) => (
               <div key={order.id} className="p-4 transition-colors">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
+                <div className="flex flex-wrap md:flex-nowrap items-center justify-between">
+                  <div className="flex items-center space-x-4 w-full md:w-auto mb-3 md:mb-0">
                     <div className={`p-2 rounded-full ${
                       order.status === 'processing' ? 'bg-yellow-100 dark:bg-yellow-900' : 
                       order.status === 'completed' ? 'bg-green-100 dark:bg-green-900' :
@@ -165,21 +167,23 @@ const OrderManagement = ({
                       }
                     </div>
                     <div>
-                      <div className="flex items-center">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-medium">Order #{order.id}</span>
                         <StatusBadge status={order.status} />
                       </div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center mt-1">
-                        <FaUser className="h-3 w-3 mr-1" />
-                        <span>{order.userInfo.name}</span>
-                        <span className="mx-2">•</span>
+                      <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center mt-1 flex-wrap">
+                        <div className="flex items-center">
+                          <FaUser className="h-3 w-3 mr-1" />
+                          <span>{order.userInfo.name}</span>
+                        </div>
+                        <span className="mx-2 hidden md:inline">•</span>
                         <span>{new Date(order.date).toLocaleDateString()}</span>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="flex items-center space-x-3">
-                    <span className="font-bold">
+                  <div className="flex items-center justify-between md:justify-end w-full md:w-auto space-x-3">
+                    <span className="font-bold order-last md:order-first">
                       {getCurrencySymbol(currentCurrency)}{order.totalPrice?.toFixed(2)}
                     </span>
                     
@@ -226,7 +230,7 @@ const OrderManagement = ({
         </div>
       )}
       
-      {/* Mobile view for smaller screens - only show on very small screens */}
+      {/* Mobile view for smaller screens */}
       <div className="sm:hidden mt-4 space-y-4">
         {!loading && !error && orders.length > 0 && orders.map((order) => (
           <div key={order.id} className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-white'} shadow`}>
@@ -254,16 +258,16 @@ const OrderManagement = ({
               </div>
             </div>
             
-            <div className="flex justify-between pt-3 border-t border-gray-200 dark:border-gray-600">
+            <div className="grid grid-cols-2 gap-2 pt-3 border-t border-gray-200 dark:border-gray-600">
               <button
                 onClick={() => setViewOrderDetails(order)}
-                className="text-blue-500 hover:text-blue-700 text-sm"
+                className="text-blue-500 hover:text-blue-700 text-sm py-1"
               >
                 View Details
               </button>
               <button
                 onClick={() => handleViewDetailPage(order)}
-                className="text-orange-500 hover:text-orange-700 text-sm"
+                className="text-orange-500 hover:text-orange-700 text-sm py-1"
               >
                 Full Details
               </button>
@@ -272,13 +276,13 @@ const OrderManagement = ({
                 <>
                   <button
                     onClick={() => handleCompleteOrder(order.id)}
-                    className="text-green-500 hover:text-green-700 text-sm"
+                    className="text-green-500 hover:text-green-700 text-sm py-1"
                   >
                     Complete
                   </button>
                   <button
                     onClick={() => setSelectedOrder(order)}
-                    className="text-red-500 hover:text-red-700 text-sm"
+                    className="text-red-500 hover:text-red-700 text-sm py-1"
                   >
                     Cancel
                   </button>
