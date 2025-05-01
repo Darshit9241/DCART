@@ -8,48 +8,54 @@ import { motion } from 'framer-motion';
 
 // Separate component for the comparison table
 const ComparisonTable = ({ compareList, onRemoveProduct }) => {
-    const fadeInUp = {
-        initial: { opacity: 0, y: 20 },
-        animate: { opacity: 1, y: 0 },
-        transition: { duration: 0.5 }
-    };
-
     const attributes = [
-        { key: 'image', label: 'Image', render: (product) => (
-            <img 
-                src={product.imgSrc} 
-                alt={product.alt} 
-                className="h-20 md:h-24 mx-auto object-contain rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"     
-            />
-        )},
-        { key: 'name', label: 'Product Name', render: (product) => (
-            <span className="text-gray-800 font-medium">{product.name}</span>
-        )},
-        { key: 'oldPrice', label: 'Old Price', render: (product) => (
-            <span className="line-through text-gray-500">${product.oldPrice}</span>
-        )},
-        { key: 'price', label: 'New Price', render: (product) => (
-            <span className="text-green-600 font-semibold">${product.price}</span>
-        )},
-        { key: 'discount', label: 'Discount', render: (product) => (
-            <span className="text-orange-500 font-medium">
-                {product.discount ? `${product.discount}%` : '0%'}
-            </span>
-        )},
-        { key: 'finalPrice', label: 'Price After Discount', render: (product) => {
-            const price = parseFloat(product.price || 0);
-            const discount = parseFloat(product.discount || 0);
-            const discountedPrice = price - (price * (Math.abs(discount) / 100));
-            return (
-                <span className="font-bold text-green-600">
-                    ${discountedPrice.toFixed(2)}
+        {
+            key: 'image', label: 'Image', render: (product) => (
+                <img
+                    src={product.imgSrc}
+                    alt={product.alt}
+                    className="h-20 md:h-24 mx-auto object-contain rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"
+                />
+            )
+        },
+        {
+            key: 'name', label: 'Product Name', render: (product) => (
+                <span className="text-gray-800 font-medium">{product.name}</span>
+            )
+        },
+        {
+            key: 'oldPrice', label: 'Old Price', render: (product) => (
+                <span className="line-through text-gray-500">${product.oldPrice}</span>
+            )
+        },
+        {
+            key: 'price', label: 'New Price', render: (product) => (
+                <span className="text-green-600 font-semibold">${product.price}</span>
+            )
+        },
+        {
+            key: 'discount', label: 'Discount', render: (product) => (
+                <span className="text-orange-500 font-medium">
+                    {product.discount ? `${product.discount}%` : '0%'}
                 </span>
-            );
-        }}
+            )
+        },
+        {
+            key: 'finalPrice', label: 'Price After Discount', render: (product) => {
+                const price = parseFloat(product.price || 0);
+                const discount = parseFloat(product.discount || 0);
+                const discountedPrice = price - (price * (Math.abs(discount) / 100));
+                return (
+                    <span className="font-bold text-green-600">
+                        ${discountedPrice.toFixed(2)}
+                    </span>
+                );
+            }
+        }
     ];
 
     return (
-        <motion.div 
+        <motion.div
             className="overflow-x-auto w-full rounded-xl shadow-lg bg-white border border-gray-100"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -105,7 +111,7 @@ const Compare = () => {
 
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, []); 
+    }, []);
 
     const handleRemoveProduct = (product) => {
         dispatch(removeFromCompare(product));
@@ -124,7 +130,7 @@ const Compare = () => {
 
     if (compareList.length === 0) {
         return (
-            <motion.div 
+            <motion.div
                 className="flex flex-col items-center justify-center min-h-[60vh] p-4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -149,7 +155,7 @@ const Compare = () => {
     }
 
     return (
-        <motion.div 
+        <motion.div
             className="p-4 md:p-10 max-w-7xl mx-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -171,8 +177,8 @@ const Compare = () => {
                 </motion.div>
             </div>
 
-            <ComparisonTable 
-                compareList={compareList} 
+            <ComparisonTable
+                compareList={compareList}
                 onRemoveProduct={handleRemoveProduct}
             />
 
